@@ -20,6 +20,10 @@ import {
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
+import { useMemo, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { featuredPost, posts, writingTracks } from "./content/posts";
 
 const pretraining = [
   "Computer Science",
@@ -42,7 +46,7 @@ const contextItems = ["User needs", "Product problems", "Codebase", "Research", 
 const outputs = [
   { title: "Products", subtitle: "PIN AI, PINLOB", icon: RocketLaunch },
   { title: "Open Source", subtitle: "PRs & contributions", icon: GithubLogo },
-  { title: "Notes", subtitle: "Articles & essays", icon: Notepad },
+  { title: "Writing", subtitle: "Markdown posts", icon: Notepad },
   { title: "Systems", subtitle: "Infra & tools", icon: Stack },
 ];
 
@@ -85,6 +89,37 @@ const chips = [
   { label: "Product Builder", icon: Lightning },
 ];
 
+const skillSystems = [
+  {
+    index: "S1",
+    name: "Agent Harness",
+    input: "Context, repo state, screenshots, product intent",
+    loop: "Plan -> tool use -> inspect -> fix -> verify",
+    output: "A working product surface, not just an answer",
+  },
+  {
+    index: "S2",
+    name: "Codex Skills",
+    input: "Repeated delivery and debugging patterns",
+    loop: "Capture the playbook, run it, tighten it after failure",
+    output: "Reusable operating loops for future work",
+  },
+  {
+    index: "S3",
+    name: "Evaluation Stack",
+    input: "Benchmarks, PRs, leaderboard trust, UX clarity",
+    loop: "Compare -> explain -> validate -> publish",
+    output: "MTEB and product evaluation work",
+  },
+  {
+    index: "S4",
+    name: "Mobile Runtime",
+    input: "iOS constraints, local models, latency, privacy",
+    loop: "Prototype -> device check -> runtime fallback -> polish",
+    output: "On-device AI experiences that feel usable",
+  },
+];
+
 function Nav() {
   return (
     <header className="site-header">
@@ -93,9 +128,10 @@ function Nav() {
         <span>Smile Hu</span>
       </a>
       <nav className="nav-links" aria-label="Primary navigation">
-        <a className="active" href="#work">Work</a>
+        <a className="active" href="#top">Model</a>
         <a href="#skills">Skills</a>
-        <a href="#notes">Notes</a>
+        <a href="#work">Work</a>
+        <a href="#writing">Writing</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -148,9 +184,9 @@ function HeroCopy() {
           View my work
           <ArrowRight size={18} weight="bold" />
         </a>
-        <a href="#notes" className="secondary-action">
+        <a href="#writing" className="secondary-action">
           <BookOpen size={18} weight="regular" />
-          Read notes
+          Read writing
         </a>
       </div>
       <div className="social-row">
@@ -256,7 +292,7 @@ function Outputs() {
       <p>Shipped value</p>
       <div className="output-list">
         {outputs.map(({ title, subtitle, icon: Icon }) => (
-          <a href="#work" key={title}>
+          <a href={title === "Writing" ? "#writing" : "#work"} key={title}>
             <Icon size={22} weight="duotone" />
             <span>
               <strong>{title}</strong>
@@ -314,29 +350,98 @@ function ProofSection() {
   );
 }
 
-function NotesSection() {
+function SkillSystemSection() {
   return (
-    <section className="notes-section" id="notes" aria-labelledby="notes-title">
-      <div>
-        <p>Field notes</p>
-        <h2 id="notes-title">The training log stays public.</h2>
+    <section className="skill-os-section" id="about" aria-labelledby="skill-os-title">
+      <div className="section-heading">
+        <p>Skill OS</p>
+        <h2 id="skill-os-title">The adapters behind the outputs.</h2>
       </div>
-      <div className="note-list">
-        <a href="#notes">
-          <span>01</span>
-          <strong>How I use Codex to ship real products</strong>
-          <small>Agent workflows, skills, and feedback loops</small>
-        </a>
-        <a href="#notes">
-          <span>02</span>
-          <strong>Why Personal AI needs mobile context</strong>
-          <small>Local runtime, privacy, device constraints</small>
-        </a>
-        <a href="#notes">
-          <span>03</span>
-          <strong>Evaluation is a product surface</strong>
-          <small>MTEB, leaderboard trust, benchmark UX</small>
-        </a>
+      <div className="skill-os-grid">
+        {skillSystems.map((skill) => (
+          <article className="skill-row" key={skill.name}>
+            <span>{skill.index}</span>
+            <div>
+              <h3>{skill.name}</h3>
+              <p>{skill.input}</p>
+            </div>
+            <div>
+              <small>Loop</small>
+              <strong>{skill.loop}</strong>
+            </div>
+            <div>
+              <small>Output</small>
+              <strong>{skill.output}</strong>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function WritingSection() {
+  const [selectedSlug, setSelectedSlug] = useState(featuredPost.slug);
+  const selectedPost = useMemo(
+    () => posts.find((post) => post.slug === selectedSlug) || featuredPost,
+    [selectedSlug],
+  );
+
+  return (
+    <section className="writing-section" id="writing" aria-labelledby="writing-title">
+      <div className="writing-heading">
+        <div>
+          <p>Markdown writing</p>
+          <h2 id="writing-title">The training log stays public.</h2>
+        </div>
+        <div className="writing-tracks" aria-label="Writing tracks">
+          {writingTracks.map((track) => (
+            <div key={track.name}>
+              <strong>{track.count}</strong>
+              <span>{track.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="writing-layout">
+        <div className="post-list" aria-label="Articles">
+          {posts.map((post, index) => (
+            <button
+              className={post.slug === selectedPost.slug ? "active" : ""}
+              key={post.slug}
+              type="button"
+              onClick={() => setSelectedSlug(post.slug)}
+            >
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <small>{post.type} / {post.adapter} / {post.readingTime}</small>
+                <strong>{post.title}</strong>
+                <p>{post.summary}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <article className="post-reader">
+          <div className="post-reader-meta">
+            <span>{selectedPost.status}</span>
+            <span>{selectedPost.date}</span>
+            <span>{selectedPost.readingTime}</span>
+          </div>
+          <h3>{selectedPost.title}</h3>
+          <p className="post-summary">{selectedPost.summary}</p>
+          <div className="post-tags">
+            {selectedPost.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+          <div className="markdown-body">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {selectedPost.content}
+            </ReactMarkdown>
+          </div>
+        </article>
       </div>
     </section>
   );
@@ -363,7 +468,8 @@ export function App() {
         <TrainingPanel />
       </section>
       <ProofSection />
-      <NotesSection />
+      <SkillSystemSection />
+      <WritingSection />
       <Footer />
     </main>
   );
