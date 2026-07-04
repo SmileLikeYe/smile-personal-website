@@ -30,11 +30,11 @@ const pretraining = [
 ];
 
 const adapters = [
-  { title: "PIN AI", subtitle: "Personal AI systems", icon: Cube },
-  { title: "MTEB", subtitle: "Evaluation work", icon: ChartLineUp },
-  { title: "Mobile AI", subtitle: "iOS / Local runtime", icon: Phone },
-  { title: "Codex Skills", subtitle: "Operating loops", icon: TerminalWindow },
-  { title: "Agent Workflows", subtitle: "Context to action", icon: BracketsCurly },
+  { title: "PIN AI", subtitle: "Assistant", icon: Cube },
+  { title: "MTEB", subtitle: "Eval", icon: ChartLineUp },
+  { title: "Mobile AI", subtitle: "Runtime", icon: Phone },
+  { title: "Codex Skills", subtitle: "Loops", icon: TerminalWindow },
+  { title: "Agent Workflows", subtitle: "Workflow", icon: BracketsCurly },
 ];
 
 const contextItems = ["User needs", "Product problems", "Codebase", "Research", "Feedback"];
@@ -177,7 +177,7 @@ function TrainingPanel() {
     <section className="training-panel" id="skills" aria-label="Model training structure">
       <img
         className="training-flow-background"
-        src="/assets/diagram/model-flow-background.png"
+        src="/assets/diagram/model-flow-background-portrait.png"
         alt=""
         aria-hidden="true"
       />
