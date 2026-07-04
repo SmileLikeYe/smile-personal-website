@@ -89,7 +89,35 @@ const skillSystems = [
   },
 ];
 
+const navItems = [
+  { id: "top", label: "Model" },
+  { id: "skills", label: "Skills" },
+  { id: "work", label: "Work" },
+  { id: "about", label: "About" },
+  { id: "writing", label: "Writing" },
+  { id: "contact", label: "Contact" },
+];
+
 function Nav() {
+  const [activeId, setActiveId] = useState("top");
+
+  useEffect(() => {
+    const sections = navItems
+      .map(({ id }) => document.getElementById(id))
+      .filter(Boolean);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveId(visible.target.id);
+      },
+      { rootMargin: "-30% 0px -50% 0px" },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="Smile Hu home">
@@ -97,12 +125,11 @@ function Nav() {
         <span>Smile Hu</span>
       </a>
       <nav className="nav-links" aria-label="Primary navigation">
-        <a className="active" href="#top">Model</a>
-        <a href="#skills">Skills</a>
-        <a href="#work">Work</a>
-        <a href="#writing">Writing</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+        {navItems.map(({ id, label }) => (
+          <a key={id} className={activeId === id ? "active" : ""} href={`#${id}`}>
+            {label}
+          </a>
+        ))}
       </nav>
       <div className="header-actions">
         <span className="sun" aria-hidden="true">
@@ -287,7 +314,7 @@ function ProofSection() {
   return (
     <section className="proof-section" id="work" aria-labelledby="work-title">
       <div className="section-heading">
-        <p>Selected outputs</p>
+        <p><span className="section-index">01</span>Selected outputs</p>
         <h2 id="work-title">Proof that the model ships</h2>
       </div>
       <div className="proof-grid">
@@ -330,7 +357,7 @@ function SkillSystemSection() {
   return (
     <section className="skill-os-section" id="about" aria-labelledby="skill-os-title">
       <div className="section-heading">
-        <p>Skill OS</p>
+        <p><span className="section-index">02</span>Skill OS</p>
         <h2 id="skill-os-title">The adapters behind the outputs.</h2>
       </div>
       <div className="skill-os-grid">
@@ -394,7 +421,7 @@ function WritingSection() {
     <section className="writing-section" id="writing" aria-labelledby="writing-title">
       <div className="writing-heading">
         <div>
-          <p>Markdown writing</p>
+          <p><span className="section-index">03</span>Markdown writing</p>
           <h2 id="writing-title">The training log stays public.</h2>
         </div>
         <div className="writing-tracks" aria-label="Writing tracks">
@@ -453,20 +480,32 @@ function WritingSection() {
 function Footer() {
   return (
     <footer className="site-footer" id="contact">
-      <span>Let's build something meaningful.</span>
-      <a href={profile.github}><GithubLogo size={20} weight="fill" /> GitHub</a>
-      <a href={profile.x}><XLogo size={18} weight="bold" /> X / @Yeshujing</a>
-      <a href={`mailto:${profile.email}`}><EnvelopeSimple size={20} /> {profile.email}</a>
-      <a href={profile.website}><Link size={19} /> smileflow.cn</a>
+      <div className="footer-cta">
+        <p><span className="section-index">04</span>Contact</p>
+        <h2>Let's build something meaningful.</h2>
+        <p className="footer-note">
+          Open to AI product and engineering roles. The fastest way to reach me is email.
+        </p>
+        <a className="primary-action" href={`mailto:${profile.email}`}>
+          <EnvelopeSimple size={18} weight="regular" />
+          {profile.email}
+        </a>
+      </div>
+      <div className="footer-links">
+        <a href={profile.github}><GithubLogo size={20} weight="fill" /> GitHub</a>
+        <a href={profile.x}><XLogo size={18} weight="bold" /> X / @Yeshujing</a>
+        <a href={profile.website}><Link size={19} /> smileflow.cn</a>
+        <span>© 2026 Smile Hu · React + Vite · posts in Markdown</span>
+      </div>
     </footer>
   );
 }
 
 export function App() {
   return (
-    <main id="top">
+    <main>
       <Nav />
-      <section className="hero-section">
+      <section className="hero-section" id="top">
         <HeroCopy />
         <TrainingPanel />
       </section>
