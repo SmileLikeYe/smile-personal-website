@@ -1543,13 +1543,61 @@ main::after {
   }
 
   .training-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
     width: min(100%, 900px);
+    height: auto;
     min-height: 0;
     margin-top: 0;
   }
 
-  .training-panel {
-    transform-origin: top left;
+  .training-flow-background,
+  .training-panel::before,
+  .training-panel::after {
+    display: none;
+  }
+
+  .panel-step,
+  .runtime-context,
+  .outputs,
+  .eval-loop,
+  .model-core {
+    position: relative;
+    inset: auto;
+    width: 100%;
+  }
+
+  .model-core {
+    order: -1;
+    grid-column: 1 / -1;
+    min-height: auto;
+    padding: 16px 0;
+    pointer-events: auto;
+  }
+
+  .core-title {
+    position: static;
+    width: 100%;
+    transform: none;
+  }
+
+  .core-title p {
+    margin-bottom: 18px;
+  }
+
+  .model-photo {
+    display: inline-block;
+    position: static;
+    width: 110px;
+    height: 110px;
+    transform: none;
+  }
+
+  .runtime-context,
+  .outputs,
+  .eval-loop {
+    padding: 18px;
   }
 
   .proof-grid {
@@ -1625,63 +1673,7 @@ main::after {
   }
 
   .training-panel {
-    display: grid;
-    gap: 14px;
-    width: 100%;
-    height: auto;
-    aspect-ratio: auto;
-    min-height: auto;
-    margin-top: 0;
-  }
-
-  .training-flow-background {
-    display: none;
-  }
-
-  .training-panel::before,
-  .training-panel::after {
-    display: none;
-  }
-
-  .panel-step,
-  .runtime-context,
-  .outputs,
-  .eval-loop,
-  .model-core {
-    position: relative;
-    inset: auto;
-    width: 100%;
-  }
-
-  .model-core {
-    order: -1;
-    min-height: auto;
-    padding: 20px 0;
-    pointer-events: auto;
-  }
-
-  .core-title {
-    position: static;
-    width: 100%;
-    transform: none;
-  }
-
-  .core-title p {
-    margin-bottom: 18px;
-  }
-
-  .model-photo {
-    display: inline-block;
-    position: static;
-    width: 110px;
-    height: 110px;
-    transform: none;
-  }
-
-  .runtime-context,
-  .outputs,
-  .eval-loop {
-    padding: 18px;
+    grid-template-columns: 1fr;
   }
 
   .proof-section,
