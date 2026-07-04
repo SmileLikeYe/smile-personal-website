@@ -318,10 +318,15 @@ function ProofSection() {
         <h2 id="work-title">Proof that the model ships</h2>
       </div>
       <div className="proof-grid">
-        {projects.map(({ tag, title, body, impact, stack, action, accent, image, href }) => {
+        {projects.map(({ tag, title, body, impact, stack, action, accent, image, href }, index) => {
           const Icon = proofIcons[title] || Brain;
           return (
-            <article className={`proof-card ${accent}`} key={title}>
+            <article
+              className={`proof-card ${accent}`}
+              key={title}
+              data-reveal=""
+              style={{ animationDelay: `${index * 90}ms` }}
+            >
               <div className="proof-copy">
                 <span className="proof-tag">
                   <Icon size={16} weight="fill" />
@@ -361,8 +366,13 @@ function SkillSystemSection() {
         <h2 id="skill-os-title">The adapters behind the outputs.</h2>
       </div>
       <div className="skill-os-grid">
-        {skillSystems.map((skill) => (
-          <article className="skill-row" key={skill.name}>
+        {skillSystems.map((skill, index) => (
+          <article
+            className="skill-row"
+            key={skill.name}
+            data-reveal=""
+            style={{ animationDelay: `${index * 70}ms` }}
+          >
             <span>{skill.index}</span>
             <div>
               <h3>{skill.name}</h3>
@@ -501,7 +511,27 @@ function Footer() {
   );
 }
 
+function useRevealOnScroll() {
+  useEffect(() => {
+    const elements = document.querySelectorAll("[data-reveal]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px" },
+    );
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+}
+
 export function App() {
+  useRevealOnScroll();
   return (
     <main>
       <Nav />
