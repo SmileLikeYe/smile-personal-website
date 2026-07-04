@@ -22,7 +22,7 @@ import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { featuredPost, posts, writingTracks } from "./content/posts";
-import { heroStats, profile, projects } from "./content/site";
+import { about, heroStats, profile, projects } from "./content/site";
 
 const pretraining = [
   "Computer Science",
@@ -63,7 +63,7 @@ const skillSystems = [
     index: "S1",
     name: "Agent Harness",
     input: "Context, repo state, screenshots, product intent",
-    loop: "Plan -> tool use -> inspect -> fix -> verify",
+    loop: "Plan → tool use → inspect → fix → verify",
     output: "A working product surface, not just an answer",
   },
   {
@@ -77,14 +77,14 @@ const skillSystems = [
     index: "S3",
     name: "Evaluation Stack",
     input: "Benchmarks, PRs, leaderboard trust, UX clarity",
-    loop: "Compare -> explain -> validate -> publish",
+    loop: "Compare → explain → validate → publish",
     output: "MTEB and product evaluation work",
   },
   {
     index: "S4",
     name: "Mobile Runtime",
     input: "iOS constraints, local models, latency, privacy",
-    loop: "Prototype -> device check -> runtime fallback -> polish",
+    loop: "Prototype → device check → runtime fallback → polish",
     output: "On-device AI experiences that feel usable",
   },
 ];
@@ -304,7 +304,7 @@ function EvalLoop() {
     <div className="eval-loop">
       <span className="step-index amber">05</span>
       <h2>Evaluation Loop</h2>
-      <p>Observe {"->"} Evaluate {"->"} Improve {"->"} Ship</p>
+      <p>Observe → Evaluate → Improve → Ship</p>
       <Pulse size={36} weight="duotone" />
     </div>
   );
@@ -358,9 +358,35 @@ function ProofSection() {
   );
 }
 
+function AboutSection() {
+  return (
+    <section className="about-section" id="about" aria-labelledby="about-title">
+      <div className="section-heading">
+        <p><span className="section-index">03</span>About</p>
+        <h2 id="about-title">The person behind the model.</h2>
+      </div>
+      <div className="about-layout" data-reveal="">
+        <div className="about-bio">
+          {about.bio.map((paragraph) => (
+            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+          ))}
+        </div>
+        <dl className="about-facts">
+          {about.facts.map(({ label, value }) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
+
 function SkillSystemSection() {
   return (
-    <section className="skill-os-section" id="about" aria-labelledby="skill-os-title">
+    <section className="skill-os-section" aria-labelledby="skill-os-title">
       <div className="section-heading">
         <p><span className="section-index">02</span>Skill OS</p>
         <h2 id="skill-os-title">The adapters behind the outputs.</h2>
@@ -431,7 +457,7 @@ function WritingSection() {
     <section className="writing-section" id="writing" aria-labelledby="writing-title">
       <div className="writing-heading">
         <div>
-          <p><span className="section-index">03</span>Markdown writing</p>
+          <p><span className="section-index">04</span>Markdown writing</p>
           <h2 id="writing-title">The training log stays public.</h2>
         </div>
         <div className="writing-tracks" aria-label="Writing tracks">
@@ -491,7 +517,7 @@ function Footer() {
   return (
     <footer className="site-footer" id="contact">
       <div className="footer-cta">
-        <p><span className="section-index">04</span>Contact</p>
+        <p><span className="section-index">05</span>Contact</p>
         <h2>Let's build something meaningful.</h2>
         <p className="footer-note">
           Open to AI product and engineering roles. The fastest way to reach me is email.
@@ -541,6 +567,7 @@ export function App() {
       </section>
       <ProofSection />
       <SkillSystemSection />
+      <AboutSection />
       <WritingSection />
       <Footer />
     </main>

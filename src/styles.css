@@ -868,6 +868,7 @@ main::after {
 
 .proof-section,
 .skill-os-section,
+.about-section,
 .writing-section,
 .site-footer {
   position: relative;
@@ -1156,6 +1157,68 @@ main::after {
   font-size: 14px;
   line-height: 1.35;
   color: #16202a;
+}
+
+.about-section {
+  padding: 34px 0 40px;
+  border-top: 1px solid var(--line);
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+  gap: 32px;
+  align-items: start;
+  padding: 28px 32px;
+  background:
+    linear-gradient(90deg, rgba(25, 189, 101, 0.05), transparent 36%),
+    rgba(255, 255, 255, 0.72);
+  border: 1px solid #dfe7ea;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 45px rgba(34, 52, 68, 0.05);
+}
+
+.about-bio p {
+  max-width: 640px;
+  margin: 0 0 14px;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #33404d;
+}
+
+.about-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.about-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0;
+}
+
+.about-facts > div {
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e0e8eb;
+  border-radius: 12px;
+}
+
+.about-facts dt {
+  margin-bottom: 5px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: #7c8894;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.about-facts dd {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink);
 }
 
 .writing-section {
@@ -1514,6 +1577,7 @@ main::after {
 
   .proof-section,
   .skill-os-section,
+  .about-section,
   .writing-section,
   .site-footer {
     margin-right: 40px;
@@ -1609,7 +1673,8 @@ main::after {
   }
 
   .writing-heading,
-  .writing-layout {
+  .writing-layout,
+  .about-layout {
     grid-template-columns: 1fr;
   }
 
@@ -1678,8 +1743,13 @@ main::after {
 
   .proof-section,
   .skill-os-section,
+  .about-section,
   .writing-section {
     padding: 24px 16px;
+  }
+
+  .about-layout {
+    padding: 20px 18px;
   }
 
   .section-heading {
@@ -1701,6 +1771,7 @@ main::after {
   }
 
   .skill-os-section,
+  .about-section,
   .writing-section {
     margin-right: 16px;
     margin-left: 16px;

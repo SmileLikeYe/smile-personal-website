@@ -20,6 +20,20 @@ export const heroStats = [
   { value: "100%", label: "Hands-on", note: "design → deploy" },
 ];
 
+// About 区块，bio 每段一条 [MOCK]，请按真实经历修改
+export const about = {
+  bio: [
+    "I'm an AI product engineer. I studied Computer Science at Tongji University, and I've spent the last few years building AI products end to end — personal AI workspaces, on-device mobile AI, and evaluation infrastructure.",
+    "I work across the full loop: product thinking, system design, frontend and backend, model integration, and the evaluation that keeps quality honest. I write about what I learn in the posts below — mostly in Chinese.",
+  ],
+  facts: [
+    { label: "Education", value: "Tongji University, CS" },
+    { label: "Focus", value: "Personal AI · Agents · On-device" },
+    { label: "Base", value: "China" }, // [MOCK] 城市请补充
+    { label: "Open to", value: "AI product & engineering roles" },
+  ],
+};
+
 export const projects = [
   {
     tag: "Personal AI",
