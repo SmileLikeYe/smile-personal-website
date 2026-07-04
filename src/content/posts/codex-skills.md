@@ -1,7 +1,7 @@
 ---
 title: "Codex Skills: how I turn repeated work into operating loops"
 slug: "codex-skills"
-date: "2026-07-03"
+date: "2026-06-12"
 type: "Skill"
 adapter: "Codex Skills"
 summary: "My skill system is a way to make recurring product and engineering work less fragile."

@@ -1,7 +1,7 @@
 ---
 title: "Evaluation is a product surface"
 slug: "evaluation-surface"
-date: "2026-07-02"
+date: "2026-06-08"
 type: "Build"
 adapter: "MTEB"
 summary: "Benchmark work is not only metrics. It is trust, UX, contribution flow, and leaderboard clarity."

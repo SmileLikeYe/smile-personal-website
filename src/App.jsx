@@ -18,7 +18,7 @@ import {
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { featuredPost, posts, writingTracks } from "./content/posts";
@@ -356,12 +356,39 @@ function SkillSystemSection() {
   );
 }
 
+function getHashSlug() {
+  const match = window.location.hash.match(/^#post\/(.+)$/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 function WritingSection() {
-  const [selectedSlug, setSelectedSlug] = useState(featuredPost.slug);
+  const [selectedSlug, setSelectedSlug] = useState(() => {
+    const slug = getHashSlug();
+    return slug && posts.some((post) => post.slug === slug) ? slug : featuredPost.slug;
+  });
   const selectedPost = useMemo(
     () => posts.find((post) => post.slug === selectedSlug) || featuredPost,
     [selectedSlug],
   );
+
+  useEffect(() => {
+    if (getHashSlug()) {
+      document.getElementById("writing")?.scrollIntoView();
+    }
+    const onHashChange = () => {
+      const slug = getHashSlug();
+      if (slug && posts.some((post) => post.slug === slug)) {
+        setSelectedSlug(slug);
+      }
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const selectPost = (slug) => {
+    setSelectedSlug(slug);
+    window.history.replaceState(null, "", `#post/${slug}`);
+  };
 
   return (
     <section className="writing-section" id="writing" aria-labelledby="writing-title">
@@ -387,7 +414,7 @@ function WritingSection() {
               className={post.slug === selectedPost.slug ? "active" : ""}
               key={post.slug}
               type="button"
-              onClick={() => setSelectedSlug(post.slug)}
+              onClick={() => selectPost(post.slug)}
             >
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>

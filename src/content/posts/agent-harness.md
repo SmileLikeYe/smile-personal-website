@@ -1,13 +1,12 @@
 ---
 title: "Agent Harness: treating myself like a product model"
 slug: "agent-harness"
-date: "2026-07-04"
+date: "2026-06-18"
 type: "Essay"
 adapter: "Agent Workflows"
 summary: "A field note on turning my own work loop into context, tools, skills, evaluation, and shipped outputs."
 tags: ["Agent", "Workflow", "Context"]
 readingTime: "5 min"
-featured: true
 status: "Demo"
 ---
 

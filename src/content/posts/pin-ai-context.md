@@ -1,7 +1,7 @@
 ---
 title: "PIN AI: context should become action"
 slug: "pin-ai-context"
-date: "2026-06-30"
+date: "2026-05-28"
 type: "Build"
 adapter: "PIN AI"
 summary: "Personal AI should help users move from scattered context to useful action, not just chat better."

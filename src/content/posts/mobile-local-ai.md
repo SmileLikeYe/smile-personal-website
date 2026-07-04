@@ -1,7 +1,7 @@
 ---
 title: "Mobile local AI is a runtime constraint, not a feature badge"
 slug: "mobile-local-ai"
-date: "2026-07-01"
+date: "2026-06-03"
 type: "Build"
 adapter: "Mobile AI"
 summary: "On-device AI forces product decisions around latency, privacy, model size, battery, and fallback behavior."
