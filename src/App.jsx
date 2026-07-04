@@ -5,11 +5,9 @@ import {
   BracketsCurly,
   ChartLineUp,
   CheckCircle,
-  Code,
   Cube,
   EnvelopeSimple,
   GithubLogo,
-  Lightning,
   Link,
   Notepad,
   Phone,
@@ -24,6 +22,7 @@ import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { featuredPost, posts, writingTracks } from "./content/posts";
+import { heroStats, profile, projects } from "./content/site";
 
 const pretraining = [
   "Computer Science",
@@ -50,43 +49,13 @@ const outputs = [
   { title: "Systems", subtitle: "Infra & tools", icon: Stack },
 ];
 
-const proofCards = [
-  {
-    tag: "Personal AI",
-    title: "PIN AI",
-    body: "Your personal AI workspace for chat, search, writing, and shipping with multiple models.",
-    action: "View project",
-    accent: "green",
-    image: "/assets/work-shots/pin-ai-workspace.png",
-    icon: Brain,
-  },
-  {
-    tag: "Evaluation",
-    title: "MTEB",
-    body: "Contributing to the evaluation ecosystem for embeddings and retrieval models.",
-    action: "View PRs",
-    accent: "blue",
-    image: "/assets/work-shots/mteb-leaderboard.png",
-    icon: ChartLineUp,
-  },
-  {
-    tag: "Mobile AI",
-    title: "iOS + Local AI",
-    body: "On-device models, intelligent features, and fast mobile AI experiences.",
-    action: "See mobile work",
-    accent: "red",
-    image: "/assets/work-shots/ios-local-ai.png",
-    icon: Phone,
-  },
-];
+const proofIcons = { "PIN AI": Brain, MTEB: ChartLineUp, "iOS + Local AI": Phone };
 
 const chips = [
   { label: "Personal AI", icon: Brain },
   { label: "Agent Workflows", icon: BracketsCurly },
   { label: "Mobile AI", icon: Phone },
   { label: "Evaluation", icon: ChartLineUp },
-  { label: "Full-stack", icon: Code },
-  { label: "Product Builder", icon: Lightning },
 ];
 
 const skillSystems = [
@@ -139,7 +108,7 @@ function Nav() {
         <span className="sun" aria-hidden="true">
           <Sparkle size={20} weight="regular" />
         </span>
-        <a className="connect-button" href="mailto:smiletoye@gmail.com">
+        <a className="connect-button" href={`mailto:${profile.email}`}>
           Let's connect
           <ArrowRight size={17} weight="bold" />
         </a>
@@ -155,22 +124,11 @@ function HeroCopy() {
         <span />
         Available for meaningful AI work
       </div>
-      <div className="index-rail" aria-hidden="true">
-        <span>01</span>
-        <i />
-        <i />
-        <i />
-        <i />
-        <span>05</span>
-      </div>
-      <h1 id="hero-title">Smile Hu</h1>
+      <h1 id="hero-title">{profile.name}</h1>
       <p className="hero-line">
-        I turn context into <strong>shipped</strong> AI products.
+        {profile.headline[0]} <strong>{profile.headline[1]}</strong> {profile.headline[2]}
       </p>
-      <p className="hero-body">
-        Trained on CS. Fine-tuned by Personal AI, mobile workflows, evaluation
-        infrastructure, and full-stack shipping loops.
-      </p>
+      <p className="hero-body">{profile.subline}</p>
       <div className="chip-grid" aria-label="Core capabilities">
         {chips.map(({ label, icon: Icon }) => (
           <span className="chip" key={label}>
@@ -189,18 +147,27 @@ function HeroCopy() {
           Read writing
         </a>
       </div>
+      <div className="hero-stats" aria-label="Track record">
+        {heroStats.map((stat) => (
+          <div key={stat.label}>
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+            <small>{stat.note}</small>
+          </div>
+        ))}
+      </div>
       <div className="social-row">
         <span>Find me on</span>
-        <a href="https://github.com/SmileLikeYe" aria-label="GitHub">
+        <a href={profile.github} aria-label="GitHub">
           <GithubLogo size={21} weight="fill" />
         </a>
-        <a href="https://x.com/Yeshujing" aria-label="X">
+        <a href={profile.x} aria-label="X">
           <XLogo size={19} weight="bold" />
         </a>
-        <a href="mailto:smiletoye@gmail.com" aria-label="Email">
+        <a href={`mailto:${profile.email}`} aria-label="Email">
           <EnvelopeSimple size={20} weight="regular" />
         </a>
-        <a href="https://smileflow.cn" aria-label="Website">
+        <a href={profile.website} aria-label="Website">
           <Link size={19} weight="regular" />
         </a>
       </div>
@@ -324,27 +291,36 @@ function ProofSection() {
         <h2 id="work-title">Proof that the model ships</h2>
       </div>
       <div className="proof-grid">
-        {proofCards.map(({ tag, title, body, action, accent, image, icon: Icon }) => (
-          <article className={`proof-card ${accent}`} key={title}>
-            <div className="proof-copy">
-              <span className="proof-tag">
-                <Icon size={16} weight="fill" />
-                {tag}
-              </span>
-              <div>
-                <h3>{title}</h3>
-                <p>{body}</p>
+        {projects.map(({ tag, title, body, impact, stack, action, accent, image, href }) => {
+          const Icon = proofIcons[title] || Brain;
+          return (
+            <article className={`proof-card ${accent}`} key={title}>
+              <div className="proof-copy">
+                <span className="proof-tag">
+                  <Icon size={16} weight="fill" />
+                  {tag}
+                </span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                </div>
+                <p className="proof-impact">{impact}</p>
+                <div className="proof-stack" aria-label={`${title} tech stack`}>
+                  {stack.map((tech) => (
+                    <span key={tech}>{tech}</span>
+                  ))}
+                </div>
+                <a href={href} target="_blank" rel="noreferrer">
+                  {action}
+                  <ArrowRight size={16} weight="bold" />
+                </a>
               </div>
-              <a href={title === "MTEB" ? "https://github.com/embeddings-benchmark/mteb/pulls/SmileLikeYe" : "#contact"}>
-                {action}
-                <ArrowRight size={16} weight="bold" />
-              </a>
-            </div>
-            <div className="proof-visual">
-              <img src={image} alt={`${title} visual preview`} />
-            </div>
-          </article>
-        ))}
+              <div className="proof-visual">
+                <img src={image} alt={`${title} visual preview`} />
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -451,10 +427,10 @@ function Footer() {
   return (
     <footer className="site-footer" id="contact">
       <span>Let's build something meaningful.</span>
-      <a href="https://github.com/SmileLikeYe"><GithubLogo size={20} weight="fill" /> GitHub</a>
-      <a href="https://x.com/Yeshujing"><XLogo size={18} weight="bold" /> X / @Yeshujing</a>
-      <a href="mailto:smiletoye@gmail.com"><EnvelopeSimple size={20} /> smiletoye@gmail.com</a>
-      <a href="https://smileflow.cn"><Link size={19} /> smileflow.cn</a>
+      <a href={profile.github}><GithubLogo size={20} weight="fill" /> GitHub</a>
+      <a href={profile.x}><XLogo size={18} weight="bold" /> X / @Yeshujing</a>
+      <a href={`mailto:${profile.email}`}><EnvelopeSimple size={20} /> {profile.email}</a>
+      <a href={profile.website}><Link size={19} /> smileflow.cn</a>
     </footer>
   );
 }
