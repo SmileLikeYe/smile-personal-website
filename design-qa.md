@@ -4,8 +4,8 @@
 
 - Source visual target: `public/reference/model-core-reference.png`
 - Prototype route: `http://127.0.0.1:5177/`
-- Latest desktop capture: `qa-desktop-final-user-feedback.png`
-- Latest mobile capture: `qa-mobile-final-user-feedback.png`
+- Latest desktop capture: `qa-desktop-centered-core.png`
+- Latest mobile capture: `qa-mobile-centered-core.png`
 - Viewports checked: 1440x1024 desktop, 390x844 mobile
 
 ## Checks
@@ -16,15 +16,17 @@
 | Blank page / app shell | Pass | Hero, training graph, proof cards, notes, and footer render. |
 | Framework overlay | Pass | No Vite or React error overlay detected. |
 | Horizontal overflow | Pass | Desktop `scrollWidth=1425 <= width=1440`; mobile `scrollWidth=390`. |
-| Right-side model graph | Pass | Outputs and Evaluation Loop stay inside the first viewport; Fine-tuning no longer overlaps Evaluation Loop. |
-| Product card imagery | Pass | Three proof card visuals load from `public/reference/model-core-reference.png`; all have non-zero natural dimensions. |
+| Right-side model graph | Pass | Diagram text/cards remain HTML controls; non-clickable lines/particles/rings are a background image. |
+| Core portrait alignment | Pass | Background image center and portrait center both resolve to `cx=933, cy=363` at 1487x1058. |
+| Product card imagery | Pass | Three proof card visuals load from individual assets in `public/assets/work-shots/`; all have non-zero natural dimensions. |
 | Responsive layout | Pass | Mobile layout stacks hero, model core, training panels, proof cards, notes, and footer without horizontal scroll. |
 
 ## Notes
 
 - The real portrait is used instead of the generated silhouette from the visual target.
-- The proof cards intentionally reuse cropped areas from the selected visual target so the product-image language matches the approved concept.
-- Remaining P3 polish: the desktop proof-card row starts slightly lower than the reference because the live hero uses a larger real portrait treatment and more readable text spacing.
+- The right-side connector lines, particles, glow, and rings are a generated decorative image so the complex linework does not overlap the clickable HTML cards.
+- The proof cards use cropped product visual assets so the card imagery remains clean and independent.
+- Remaining P3 polish: exact line endpoints in the decorative background are illustrative; clickable card content remains the source of truth.
 
 ## Final Result
 

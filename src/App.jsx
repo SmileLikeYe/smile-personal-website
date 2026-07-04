@@ -7,13 +7,10 @@ import {
   CheckCircle,
   Code,
   Cube,
-  Database,
   EnvelopeSimple,
   GithubLogo,
-  GraduationCap,
   Lightning,
   Link,
-  ListChecks,
   Notepad,
   Phone,
   Pulse,
@@ -53,28 +50,28 @@ const proofCards = [
   {
     tag: "Personal AI",
     title: "PIN AI",
-    body: "Personal AI workspace and agentic product systems for real user workflows.",
+    body: "Your personal AI workspace for chat, search, writing, and shipping with multiple models.",
     action: "View project",
     accent: "green",
-    shot: "pin-shot",
+    image: "/assets/work-shots/pin-ai-workspace.png",
     icon: Brain,
   },
   {
     tag: "Evaluation",
     title: "MTEB",
-    body: "Contributing to the benchmark and leaderboard ecosystem for embedding models.",
+    body: "Contributing to the evaluation ecosystem for embeddings and retrieval models.",
     action: "View PRs",
     accent: "blue",
-    shot: "mteb-shot",
+    image: "/assets/work-shots/mteb-leaderboard.png",
     icon: ChartLineUp,
   },
   {
     tag: "Mobile AI",
     title: "iOS + Local AI",
-    body: "On-device models, local runtime work, and mobile-first product validation.",
+    body: "On-device models, intelligent features, and fast mobile AI experiences.",
     action: "See mobile work",
     accent: "red",
-    shot: "mobile-shot",
+    image: "/assets/work-shots/ios-local-ai.png",
     icon: Phone,
   },
 ];
@@ -177,7 +174,14 @@ function HeroCopy() {
 
 function TrainingPanel() {
   return (
-    <section className="training-panel" aria-label="Model training structure">
+    <section className="training-panel" id="skills" aria-label="Model training structure">
+      <img
+        className="training-flow-background"
+        src="/assets/diagram/model-flow-background.png"
+        alt=""
+        aria-hidden="true"
+      />
+
       <div className="pretraining panel-step">
         <span className="step-index blue">01</span>
         <h2>Pre-training</h2>
@@ -196,7 +200,7 @@ function TrainingPanel() {
         <span className="step-index green">02</span>
         <h2>Fine-tuning</h2>
         <p>Adapters</p>
-        <div className="adapter-list" id="skills">
+        <div className="adapter-list">
           {adapters.map(({ title, subtitle, icon: Icon }) => (
             <button className="adapter" type="button" key={title}>
               <Icon size={23} weight="duotone" />
@@ -224,21 +228,7 @@ function ModelCore() {
         <h2>Smile Hu</h2>
         <p>A-level Product Model</p>
       </div>
-      <div className="core-orbit">
-        <div className="orbit orbit-one" />
-        <div className="orbit orbit-two" />
-        <div className="orbit orbit-three" />
-        <img src="/assets/smile-hu-portrait.jpg" alt="Smile Hu portrait" />
-      </div>
-      <div className="core-stream stream-left" aria-hidden="true">
-        {Array.from({ length: 8 }).map((_, index) => <span key={index} />)}
-      </div>
-      <div className="core-stream stream-right" aria-hidden="true">
-        {Array.from({ length: 7 }).map((_, index) => <span key={index} />)}
-      </div>
-      <div className="core-drip" aria-hidden="true">
-        {Array.from({ length: 16 }).map((_, index) => <span key={index} />)}
-      </div>
+      <img className="model-photo" src="/assets/smile-hu-portrait.jpg" alt="Smile Hu portrait" />
     </div>
   );
 }
@@ -298,7 +288,7 @@ function ProofSection() {
         <h2 id="work-title">Proof that the model ships</h2>
       </div>
       <div className="proof-grid">
-        {proofCards.map(({ tag, title, body, action, accent, shot, icon: Icon }) => (
+        {proofCards.map(({ tag, title, body, action, accent, image, icon: Icon }) => (
           <article className={`proof-card ${accent}`} key={title}>
             <div className="proof-copy">
               <span className="proof-tag">
@@ -314,8 +304,8 @@ function ProofSection() {
                 <ArrowRight size={16} weight="bold" />
               </a>
             </div>
-            <div className={`proof-visual ${shot}`} aria-hidden="true">
-              <img src="/reference/model-core-reference.png" alt="" />
+            <div className="proof-visual">
+              <img src={image} alt={`${title} visual preview`} />
             </div>
           </article>
         ))}
