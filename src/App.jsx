@@ -18,11 +18,11 @@ import {
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
-import { useEffect, useMemo, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { featuredPost, posts, writingTracks } from "./content/posts";
 import { about, heroStats, profile, projects } from "./content/site";
+
+const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
 const pretraining = [
   "Computer Science",
@@ -453,6 +453,18 @@ function WritingSection() {
     window.history.replaceState(null, "", `#post/${slug}`);
   };
 
+  const [copied, setCopied] = useState(false);
+  const copyLink = async () => {
+    const url = `${window.location.origin}${window.location.pathname}#post/${selectedPost.slug}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      window.prompt("Copy this link:", url);
+    }
+  };
+
   return (
     <section className="writing-section" id="writing" aria-labelledby="writing-title">
       <div className="writing-heading">
@@ -494,6 +506,10 @@ function WritingSection() {
             <span>{selectedPost.status}</span>
             <span>{selectedPost.date}</span>
             <span>{selectedPost.readingTime}</span>
+            <button className="copy-link" type="button" onClick={copyLink}>
+              {copied ? <CheckCircle size={14} weight="fill" /> : <Link size={14} />}
+              {copied ? "Copied" : "Copy link"}
+            </button>
           </div>
           <h3>{selectedPost.title}</h3>
           <p className="post-summary">{selectedPost.summary}</p>
@@ -502,11 +518,9 @@ function WritingSection() {
               <span key={tag}>{tag}</span>
             ))}
           </div>
-          <div className="markdown-body">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {selectedPost.content}
-            </ReactMarkdown>
-          </div>
+          <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
+            <MarkdownBody content={selectedPost.content} />
+          </Suspense>
         </article>
       </div>
     </section>
