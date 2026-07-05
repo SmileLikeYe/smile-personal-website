@@ -211,6 +211,7 @@ function TrainingPanel() {
         alt=""
         aria-hidden="true"
       />
+      <div className="panel-wash" aria-hidden="true" />
 
       <div className="pretraining panel-step">
         <span className="step-index blue">01</span>
@@ -325,7 +326,7 @@ function ProofSection() {
               className={`proof-card ${accent}`}
               key={title}
               data-reveal=""
-              style={{ animationDelay: `${index * 90}ms` }}
+              style={{ animationDelay: `${index * 60}ms` }}
             >
               <div className="proof-copy">
                 <span className="proof-tag">
@@ -397,7 +398,7 @@ function SkillSystemSection() {
             className="skill-row"
             key={skill.name}
             data-reveal=""
-            style={{ animationDelay: `${index * 70}ms` }}
+            style={{ animationDelay: `${index * 60}ms` }}
           >
             <span>{skill.index}</span>
             <div>
@@ -501,7 +502,7 @@ function WritingSection() {
           ))}
         </div>
 
-        <article className="post-reader">
+        <article className="post-reader" key={selectedPost.slug}>
           <div className="post-reader-meta">
             <span>{selectedPost.status}</span>
             <span>{selectedPost.date}</span>
