@@ -332,9 +332,24 @@ main::after {
   transition: transform 160ms ease;
 }
 
-.nav-links a:hover::after,
-.nav-links a.active::after {
+.nav-links a:hover::after {
   transform: translateX(-50%) scale(1);
+  opacity: 0.35;
+}
+
+.nav-links a.active {
+  color: var(--ink);
+}
+
+.nav-dot {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  background: var(--blue);
+  border-radius: 999px;
 }
 
 .header-actions {
@@ -347,8 +362,7 @@ main::after {
   width: 38px;
   height: 38px;
   place-items: center;
-  color: var(--ink);
-  border-left: 1px solid var(--line);
+  color: #b08d2a;
 }
 
 .connect-button,
@@ -411,9 +425,9 @@ main::after {
   padding: 0 16px;
   margin-bottom: 28px;
   font-size: 13px;
-  color: #6b6763;
-  background: rgba(253, 251, 248, 0.75);
-  border: 1px solid #d9d3cd;
+  color: #3f5a4b;
+  background: rgba(167, 252, 205, 0.18);
+  border: 1px solid rgba(47, 158, 99, 0.28);
   border-radius: 999px;
   box-shadow: none;
 }
@@ -805,6 +819,7 @@ main::after {
   justify-content: space-between;
   gap: 10px;
   min-height: 36px;
+  border-radius: 14px;
 }
 
 .adapter > svg:first-child {
@@ -923,6 +938,7 @@ main::after {
 .output-list a {
   gap: 10px;
   min-height: 52px;
+  border-radius: 14px;
 }
 
 .output-list svg {
@@ -959,14 +975,15 @@ main::after {
 }
 
 .proof-section {
-  padding: 2px 0 38px;
+  padding: 10px 0 56px;
 }
 
 .section-heading {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  margin-bottom: 14px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 24px;
 }
 
 .section-heading p,
@@ -999,8 +1016,9 @@ main::after {
 .section-heading h2,
 .writing-heading h2 {
   margin: 0;
-  font-size: clamp(26px, 2.4vw, 32px);
-  letter-spacing: 0;
+  font-size: clamp(32px, 3.2vw, 44px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .proof-grid {
@@ -1049,8 +1067,20 @@ main::after {
   opacity: 0.8;
 }
 
+.proof-card.green {
+  background: linear-gradient(135deg, #cfdaf5 0%, #e4eafa 60%, #eef1fb 100%);
+  border-color: rgba(43, 89, 209, 0.18);
+}
+
+.proof-card.green .proof-tag {
+  background: rgba(253, 251, 248, 0.85);
+}
+
 .proof-card.green::after {
-  background: var(--green-soft);
+  background:
+    radial-gradient(closest-side at 30% 35%, rgba(255, 148, 115, 0.5), transparent),
+    radial-gradient(closest-side at 70% 60%, rgba(167, 252, 205, 0.55), transparent);
+  filter: blur(18px);
 }
 
 .proof-card.blue::after {
@@ -1176,7 +1206,7 @@ main::after {
 }
 
 .skill-os-section {
-  padding: 34px 0 40px;
+  padding: 48px 0 56px;
   border-top: 1px solid var(--line);
 }
 
@@ -1240,7 +1270,7 @@ main::after {
 }
 
 .about-section {
-  padding: 34px 0 40px;
+  padding: 48px 0 56px;
   border-top: 1px solid var(--line);
 }
 
@@ -1436,7 +1466,6 @@ main::after {
   background: rgba(253, 251, 248, 0.9);
   border: 1px solid #d9d3cd;
   border-radius: 24px;
-  animation: reader-enter 260ms var(--ease-out) backwards;
   box-shadow: none;
 }
 

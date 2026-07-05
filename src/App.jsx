@@ -18,11 +18,24 @@ import {
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, LazyMotion, animate, domAnimation, m, useInView } from "motion/react";
 import { featuredPost, posts, writingTracks } from "./content/posts";
 import { about, heroStats, profile, projects } from "./content/site";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
+
+const easeOutStrong = [0.23, 1, 0.32, 1];
+
+const heroContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.055, delayChildren: 0.05 } },
+};
+
+const heroItem = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: easeOutStrong } },
+};
 
 const pretraining = [
   "Computer Science",
@@ -128,6 +141,13 @@ function Nav() {
         {navItems.map(({ id, label }) => (
           <a key={id} className={activeId === id ? "active" : ""} href={`#${id}`}>
             {label}
+            {activeId === id && (
+              <m.span
+                className="nav-dot"
+                layoutId="nav-dot"
+                transition={{ type: "spring", stiffness: 520, damping: 34 }}
+              />
+            )}
           </a>
         ))}
       </nav>
@@ -144,27 +164,54 @@ function Nav() {
   );
 }
 
+function StatValue({ value }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const match = /^(\d+)(.*)$/.exec(value);
+  const target = match ? parseInt(match[1], 10) : null;
+  const suffix = match ? match[2] : "";
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!inView || target === null) return undefined;
+    const controls = animate(0, target, {
+      duration: 1.1,
+      ease: easeOutStrong,
+      onUpdate: (latest) => setDisplay(Math.round(latest)),
+    });
+    return () => controls.stop();
+  }, [inView, target]);
+
+  return <strong ref={ref}>{target === null ? value : `${display}${suffix}`}</strong>;
+}
+
 function HeroCopy() {
   return (
-    <section className="hero-copy" aria-labelledby="hero-title">
-      <div className="availability">
+    <m.section
+      className="hero-copy"
+      aria-labelledby="hero-title"
+      variants={heroContainer}
+      initial="hidden"
+      animate="show"
+    >
+      <m.div className="availability" variants={heroItem}>
         <span />
         Available for meaningful AI work
-      </div>
-      <h1 id="hero-title">{profile.name}</h1>
-      <p className="hero-line">
+      </m.div>
+      <m.h1 id="hero-title" variants={heroItem}>{profile.name}</m.h1>
+      <m.p className="hero-line" variants={heroItem}>
         {profile.headline[0]} <strong>{profile.headline[1]}</strong> {profile.headline[2]}
-      </p>
-      <p className="hero-body">{profile.subline}</p>
-      <div className="chip-grid" aria-label="Core capabilities">
+      </m.p>
+      <m.p className="hero-body" variants={heroItem}>{profile.subline}</m.p>
+      <m.div className="chip-grid" aria-label="Core capabilities" variants={heroItem}>
         {chips.map(({ label, icon: Icon }) => (
           <span className="chip" key={label}>
             <Icon size={15} weight="duotone" />
             {label}
           </span>
         ))}
-      </div>
-      <div className="hero-actions">
+      </m.div>
+      <m.div className="hero-actions" variants={heroItem}>
         <a href="#work" className="primary-action">
           View my work
           <ArrowRight size={18} weight="bold" />
@@ -173,17 +220,17 @@ function HeroCopy() {
           <BookOpen size={18} weight="regular" />
           Read writing
         </a>
-      </div>
-      <div className="hero-stats" aria-label="Track record">
+      </m.div>
+      <m.div className="hero-stats" aria-label="Track record" variants={heroItem}>
         {heroStats.map((stat) => (
           <div key={stat.label}>
-            <strong>{stat.value}</strong>
+            <StatValue value={stat.value} />
             <span>{stat.label}</span>
             <small>{stat.note}</small>
           </div>
         ))}
-      </div>
-      <div className="social-row">
+      </m.div>
+      <m.div className="social-row" variants={heroItem}>
         <span>Find me on</span>
         <a href={profile.github} aria-label="GitHub">
           <GithubLogo size={21} weight="fill" />
@@ -197,8 +244,8 @@ function HeroCopy() {
         <a href={profile.website} aria-label="Website">
           <Link size={19} weight="regular" />
         </a>
-      </div>
-    </section>
+      </m.div>
+    </m.section>
   );
 }
 
@@ -502,7 +549,15 @@ function WritingSection() {
           ))}
         </div>
 
-        <article className="post-reader" key={selectedPost.slug}>
+        <AnimatePresence mode="wait" initial={false}>
+        <m.article
+          className="post-reader"
+          key={selectedPost.slug}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.22, ease: easeOutStrong }}
+        >
           <div className="post-reader-meta">
             <span>{selectedPost.status}</span>
             <span>{selectedPost.date}</span>
@@ -522,7 +577,8 @@ function WritingSection() {
           <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
             <MarkdownBody content={selectedPost.content} />
           </Suspense>
-        </article>
+        </m.article>
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -574,17 +630,19 @@ function useRevealOnScroll() {
 export function App() {
   useRevealOnScroll();
   return (
-    <main>
-      <Nav />
-      <section className="hero-section" id="top">
-        <HeroCopy />
-        <TrainingPanel />
-      </section>
-      <ProofSection />
-      <SkillSystemSection />
-      <AboutSection />
-      <WritingSection />
-      <Footer />
-    </main>
+    <LazyMotion features={domAnimation} strict>
+      <main>
+        <Nav />
+        <section className="hero-section" id="top">
+          <HeroCopy />
+          <TrainingPanel />
+        </section>
+        <ProofSection />
+        <SkillSystemSection />
+        <AboutSection />
+        <WritingSection />
+        <Footer />
+      </main>
+    </LazyMotion>
   );
 }
