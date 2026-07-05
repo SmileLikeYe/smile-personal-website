@@ -100,6 +100,13 @@ const skillSystems = [
     loop: "Prototype → device check → runtime fallback → polish",
     output: "On-device AI experiences that feel usable",
   },
+  {
+    index: "S5",
+    name: "AI Design",
+    input: "design.md references, screenshots, PRD structure",
+    loop: "Find style → outline → generate → build → motion polish",
+    output: "This site's Monad redesign, product homepages",
+  },
 ];
 
 const navItems = [
