@@ -29,12 +29,17 @@ const easeOutStrong = [0.23, 1, 0.32, 1];
 
 const heroContainer = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.055, delayChildren: 0.05 } },
+  show: { transition: { staggerChildren: 0.085, delayChildren: 0.08 } },
 };
 
 const heroItem = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: easeOutStrong } },
+  hidden: { opacity: 0, y: 26, filter: "blur(8px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.72, ease: easeOutStrong },
+  },
 };
 
 const pretraining = [
@@ -266,6 +271,13 @@ function TrainingPanel() {
         aria-hidden="true"
       />
       <div className="panel-wash" aria-hidden="true" />
+      <div className="model-pulse-anchor" aria-hidden="true">
+        <m.div
+          className="model-pulse"
+          animate={{ opacity: [0.12, 0.34, 0.12], scale: [0.92, 1.1, 0.92] }}
+          transition={{ duration: 3.8, ease: "easeInOut", repeat: Infinity }}
+        />
+      </div>
 
       <div className="pretraining panel-step">
         <span className="step-index blue">01</span>
