@@ -1,27 +1,20 @@
 import {
+  ArrowLeft,
   ArrowRight,
-  BookOpen,
-  Brain,
-  BracketsCurly,
-  ChartLineUp,
+  ArrowUpRight,
+  ChatCircleDots,
   CheckCircle,
-  Cube,
   EnvelopeSimple,
   GithubLogo,
+  Globe,
   Link,
-  Notepad,
-  Phone,
-  Pulse,
-  RocketLaunch,
-  Sparkle,
-  Stack,
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, LazyMotion, animate, domAnimation, m, useInView } from "motion/react";
-import { featuredPost, posts, writingTracks } from "./content/posts";
-import { about, heroStats, profile, projects } from "./content/site";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { AnimatePresence, LazyMotion, domAnimation, m } from "motion/react";
+import { featuredPost, posts } from "./content/posts";
+import { about, channels, marquee, profile, projects, queued, skills } from "./content/site";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
@@ -29,102 +22,35 @@ const easeOutStrong = [0.23, 1, 0.32, 1];
 
 const heroContainer = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.085, delayChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.12 } },
 };
 
 const heroItem = {
-  hidden: { opacity: 0, y: 26, filter: "blur(8px)" },
+  hidden: { opacity: 0, y: 24 },
   show: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.72, ease: easeOutStrong },
+    transition: { duration: 0.9, ease: easeOutStrong },
   },
 };
 
-const pretraining = [
-  "Computer Science",
-  "Algorithms & Systems",
-  "Databases",
-  "Compilers",
-  "AI Foundations",
-];
-
-const adapters = [
-  { title: "PIN AI", subtitle: "Assistant", icon: Cube },
-  { title: "MTEB", subtitle: "Eval", icon: ChartLineUp },
-  { title: "Mobile AI", subtitle: "Runtime", icon: Phone },
-  { title: "Codex Skills", subtitle: "Loops", icon: TerminalWindow },
-  { title: "Agent Workflows", subtitle: "Workflow", icon: BracketsCurly },
-];
-
-const contextItems = ["User needs", "Product problems", "Codebase", "Research", "Feedback"];
-
-const outputs = [
-  { title: "Products", subtitle: "PIN AI, PINLOB", icon: RocketLaunch },
-  { title: "Open Source", subtitle: "PRs & contributions", icon: GithubLogo },
-  { title: "Writing", subtitle: "Markdown posts", icon: Notepad },
-  { title: "Systems", subtitle: "Infra & tools", icon: Stack },
-];
-
-const proofIcons = { "PIN AI": Brain, MTEB: ChartLineUp, "iOS + Local AI": Phone };
-
-const chips = [
-  { label: "Personal AI", icon: Brain },
-  { label: "Agent Workflows", icon: BracketsCurly },
-  { label: "Mobile AI", icon: Phone },
-  { label: "Evaluation", icon: ChartLineUp },
-];
-
-const skillSystems = [
-  {
-    index: "S1",
-    name: "Agent Harness",
-    input: "Context, repo state, screenshots, product intent",
-    loop: "Plan → tool use → inspect → fix → verify",
-    output: "A working product surface, not just an answer",
-  },
-  {
-    index: "S2",
-    name: "Codex Skills",
-    input: "Repeated delivery and debugging patterns",
-    loop: "Capture the playbook, run it, tighten it after failure",
-    output: "Reusable operating loops for future work",
-  },
-  {
-    index: "S3",
-    name: "Evaluation Stack",
-    input: "Benchmarks, PRs, leaderboard trust, UX clarity",
-    loop: "Compare → explain → validate → publish",
-    output: "MTEB and product evaluation work",
-  },
-  {
-    index: "S4",
-    name: "Mobile Runtime",
-    input: "iOS constraints, local models, latency, privacy",
-    loop: "Prototype → device check → runtime fallback → polish",
-    output: "On-device AI experiences that feel usable",
-  },
-  {
-    index: "S5",
-    name: "AI Design",
-    input: "design.md references, screenshots, PRD structure",
-    loop: "Find style → outline → generate → build → motion polish",
-    output: "This site's Monad redesign, product homepages",
-  },
-];
-
 const navItems = [
-  { id: "top", label: "Model" },
-  { id: "skills", label: "Skills" },
-  { id: "work", label: "Work" },
-  { id: "about", label: "About" },
-  { id: "writing", label: "Writing" },
-  { id: "contact", label: "Contact" },
+  { id: "about", label: "ABOUT" },
+  { id: "writing", label: "WRITING" },
+  { id: "skills", label: "SKILLS" },
+  { id: "build", label: "BUILD" },
+  { id: "contact", label: "CONTACT" },
 ];
+
+const platformIcons = {
+  github: GithubLogo,
+  x: XLogo,
+  blog: Globe,
+  skills: TerminalWindow,
+};
 
 function Nav() {
-  const [activeId, setActiveId] = useState("top");
+  const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
     const sections = navItems
@@ -132,314 +58,204 @@ function Nav() {
       .filter(Boolean);
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActiveId(visible.target.id);
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveId(entry.target.id);
+        });
       },
-      { rootMargin: "-30% 0px -50% 0px" },
+      { rootMargin: "-45% 0px -45% 0px" },
     );
     sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    const hero = document.getElementById("top");
+    const heroObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveId(null);
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    if (hero) heroObserver.observe(hero);
+    return () => {
+      observer.disconnect();
+      heroObserver.disconnect();
+    };
   }, []);
 
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="Smile Hu home">
-        <span className="brand-mark">S</span>
-        <span>Smile Hu</span>
+        Smile
       </a>
       <nav className="nav-links" aria-label="Primary navigation">
-        {navItems.map(({ id, label }) => (
-          <a key={id} className={activeId === id ? "active" : ""} href={`#${id}`}>
-            {label}
-            {activeId === id && (
-              <m.span
-                className="nav-dot"
-                layoutId="nav-dot"
-                transition={{ type: "spring", stiffness: 520, damping: 34 }}
-              />
-            )}
-          </a>
+        {navItems.map(({ id, label }, index) => (
+          <span className="nav-item" key={id}>
+            {index > 0 && <i className="nav-sep" aria-hidden="true" />}
+            <a className={activeId === id ? "active" : ""} href={`#${id}`}>
+              {label}
+              {activeId === id && (
+                <m.span
+                  className="nav-dot"
+                  layoutId="nav-dot"
+                  transition={{ type: "spring", stiffness: 520, damping: 34 }}
+                />
+              )}
+            </a>
+          </span>
         ))}
       </nav>
       <div className="header-actions">
-        <span className="sun" aria-hidden="true">
-          <Sparkle size={20} weight="regular" />
-        </span>
+        <a className="header-github" href={profile.github} aria-label="GitHub" target="_blank" rel="noreferrer">
+          <GithubLogo size={19} weight="fill" />
+        </a>
         <a className="connect-button" href={`mailto:${profile.email}`}>
           Let's connect
-          <ArrowRight size={17} weight="bold" />
+          <ArrowRight size={15} weight="bold" />
         </a>
       </div>
     </header>
   );
 }
 
-function StatValue({ value }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const match = /^(\d+)(.*)$/.exec(value);
-  const target = match ? parseInt(match[1], 10) : null;
-  const suffix = match ? match[2] : "";
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    if (!inView || target === null) return undefined;
-    const controls = animate(0, target, {
-      duration: 1.1,
-      ease: easeOutStrong,
-      onUpdate: (latest) => setDisplay(Math.round(latest)),
-    });
-    return () => controls.stop();
-  }, [inView, target]);
-
-  return <strong ref={ref}>{target === null ? value : `${display}${suffix}`}</strong>;
+function PageDecor() {
+  return (
+    <>
+      <div className="rail" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </div>
+      <span className="cross cross-tr" aria-hidden="true" />
+      <span className="cross cross-bl" aria-hidden="true" />
+    </>
+  );
 }
 
-function HeroCopy() {
+function Hero() {
   return (
     <m.section
-      className="hero-copy"
+      className="hero"
+      id="top"
       aria-labelledby="hero-title"
       variants={heroContainer}
       initial="hidden"
       animate="show"
     >
-      <m.div className="availability" variants={heroItem}>
-        <span />
-        Available for meaningful AI work
-      </m.div>
-      <m.h1 id="hero-title" variants={heroItem}>{profile.name}</m.h1>
-      <m.p className="hero-line" variants={heroItem}>
-        {profile.headline[0]} <strong>{profile.headline[1]}</strong> {profile.headline[2]}
-      </m.p>
-      <m.p className="hero-body" variants={heroItem}>{profile.subline}</m.p>
-      <m.div className="chip-grid" aria-label="Core capabilities" variants={heroItem}>
-        {chips.map(({ label, icon: Icon }) => (
-          <span className="chip" key={label}>
-            <Icon size={15} weight="duotone" />
-            {label}
-          </span>
-        ))}
-      </m.div>
-      <m.div className="hero-actions" variants={heroItem}>
-        <a href="#work" className="primary-action">
-          View my work
-          <ArrowRight size={18} weight="bold" />
-        </a>
-        <a href="#writing" className="secondary-action">
-          <BookOpen size={18} weight="regular" />
-          Read writing
-        </a>
-      </m.div>
-      <m.div className="hero-stats" aria-label="Track record" variants={heroItem}>
-        {heroStats.map((stat) => (
-          <div key={stat.label}>
-            <StatValue value={stat.value} />
-            <span>{stat.label}</span>
-            <small>{stat.note}</small>
-          </div>
-        ))}
-      </m.div>
-      <m.div className="social-row" variants={heroItem}>
-        <span>Find me on</span>
-        <a href={profile.github} aria-label="GitHub">
-          <GithubLogo size={21} weight="fill" />
-        </a>
-        <a href={profile.x} aria-label="X">
-          <XLogo size={19} weight="bold" />
-        </a>
-        <a href={`mailto:${profile.email}`} aria-label="Email">
-          <EnvelopeSimple size={20} weight="regular" />
-        </a>
-        <a href={profile.website} aria-label="Website">
-          <Link size={19} weight="regular" />
-        </a>
-      </m.div>
+      <div className="hero-left">
+        <m.h1 className="hero-wordmark" id="hero-title" variants={heroItem}>
+          {profile.name}
+        </m.h1>
+        <m.p className="hero-kicker" variants={heroItem}>
+          <span className="dot" aria-hidden="true" />
+          {profile.kicker}
+        </m.p>
+        <m.p className="hero-slogan" variants={heroItem}>
+          {profile.slogan[0]}
+          <br />
+          {profile.slogan[1]}
+        </m.p>
+        <m.div className="hero-cta" variants={heroItem}>
+          <a className="btn-ghost" href="#writing">
+            阅读文章 <ArrowRight size={15} weight="bold" />
+          </a>
+          <a className="btn-link" href={`mailto:${profile.email}`}>
+            联系我 <ArrowRight size={15} weight="bold" />
+          </a>
+        </m.div>
+      </div>
+      <m.figure className="hero-portrait" variants={heroItem}>
+        <span className="portrait-frame">
+          <img src="/assets/smile-hu-portrait.jpg" alt="Smile Hu 档案照" />
+          <span className="portrait-cross portrait-cross-tl" aria-hidden="true" />
+          <span className="portrait-cross portrait-cross-br" aria-hidden="true" />
+        </span>
+        <figcaption className="portrait-caption">
+          {profile.idCaption.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+        </figcaption>
+      </m.figure>
     </m.section>
   );
 }
 
-function TrainingPanel() {
+function SectionHead({ index, kicker, title, children }) {
   return (
-    <section className="training-panel" id="skills" aria-label="Model training structure">
-      <img
-        className="training-flow-background"
-        src="/assets/diagram/model-flow-background-portrait.png"
-        alt=""
-        aria-hidden="true"
-      />
-      <div className="panel-wash" aria-hidden="true" />
-      <div className="model-pulse-anchor" aria-hidden="true">
-        <m.div
-          className="model-pulse"
-          animate={{ opacity: [0.12, 0.34, 0.12], scale: [0.92, 1.1, 0.92] }}
-          transition={{ duration: 3.8, ease: "easeInOut", repeat: Infinity }}
-        />
+    <header className="section-head">
+      <p className="section-kicker" data-reveal="">
+        {kicker} — {index}
+      </p>
+      <div className="section-head-row">
+        <h2 className="section-title" data-reveal="">
+          {title}
+        </h2>
+        {children}
       </div>
+    </header>
+  );
+}
 
-      <div className="pretraining panel-step">
-        <span className="step-index blue">01</span>
-        <h2>Pre-training</h2>
-        <p>Foundation</p>
-        <strong>Tongji University<br />Computer Science</strong>
-        <div className="stack-list">
-          {pretraining.map((item) => (
-            <button type="button" key={item}>{item}</button>
-          ))}
-        </div>
+function SignalBoard() {
+  return (
+    <div className="signal" data-reveal="">
+      <div className="signal-head">
+        <h3>全平台信号台</h3>
+        <span className="signal-legend">
+          <b>LIVE</b> / SOON
+        </span>
       </div>
-
-      <ModelCore />
-
-      <div className="finetuning panel-step">
-        <span className="step-index green">02</span>
-        <h2>Fine-tuning</h2>
-        <p>Adapters</p>
-        <div className="adapter-list">
-          {adapters.map(({ title, subtitle, icon: Icon }) => (
-            <button className="adapter" type="button" key={title}>
-              <Icon size={23} weight="duotone" />
-              <span>
-                <strong>{title}</strong>
-                <small>{subtitle}</small>
+      <ul className="signal-list">
+        {channels.map(({ platform, handle, href, count, status }) => {
+          const Icon = platformIcons[platform];
+          const inner = (
+            <>
+              <span className={`srow-logo srow-logo-${platform}`}>
+                {Icon ? <Icon size={15} weight="fill" /> : <b>红</b>}
               </span>
-              <CheckCircle size={18} weight="fill" />
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <RuntimeContext />
-      <Outputs />
-      <EvalLoop />
-    </section>
-  );
-}
-
-function ModelCore() {
-  return (
-    <div className="model-core" aria-label="Smile Hu model core">
-      <div className="core-title">
-        <h2>Smile Hu</h2>
-        <p>A-level Product Model</p>
-      </div>
-      <img className="model-photo" src="/assets/smile-hu-portrait.jpg" alt="Smile Hu portrait" />
-    </div>
-  );
-}
-
-function RuntimeContext() {
-  return (
-    <div className="runtime-context">
-      <span className="step-index blue">03</span>
-      <h2>Runtime Context</h2>
-      <p>Real-world input</p>
-      <div>
-        {contextItems.map((item) => (
-          <button type="button" key={item}>{item}</button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Outputs() {
-  return (
-    <div className="outputs">
-      <span className="step-index red">04</span>
-      <h2>Outputs</h2>
-      <p>Shipped value</p>
-      <div className="output-list">
-        {outputs.map(({ title, subtitle, icon: Icon }) => (
-          <a href={title === "Writing" ? "#writing" : "#work"} key={title}>
-            <Icon size={22} weight="duotone" />
-            <span>
-              <strong>{title}</strong>
-              <small>{subtitle}</small>
-            </span>
-          </a>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function EvalLoop() {
-  return (
-    <div className="eval-loop">
-      <span className="step-index amber">05</span>
-      <h2>Evaluation Loop</h2>
-      <p>Observe → Evaluate → Improve → Ship</p>
-      <Pulse size={36} weight="duotone" />
-    </div>
-  );
-}
-
-function ProofSection() {
-  return (
-    <section className="proof-section" id="work" aria-labelledby="work-title">
-      <div className="section-heading">
-        <p><span className="section-index">01</span>Selected outputs</p>
-        <h2 id="work-title">Proof that the model ships</h2>
-      </div>
-      <div className="proof-grid">
-        {projects.map(({ tag, title, body, impact, stack, action, accent, image, href }, index) => {
-          const Icon = proofIcons[title] || Brain;
+              <span className="srow-handle">{handle}</span>
+              <span className="srow-count">{count}</span>
+              <span className="srow-bars" aria-hidden="true">
+                <i /><i /><i /><i /><i /><i /><i />
+              </span>
+              <span className="srow-status">
+                <i className="srow-dot" aria-hidden="true" />
+                {status === "live" ? "LIVE" : "SOON"}
+              </span>
+            </>
+          );
           return (
-            <article
-              className={`proof-card ${accent}`}
-              key={title}
-              data-reveal=""
-              style={{ animationDelay: `${index * 60}ms` }}
-            >
-              <div className="proof-copy">
-                <span className="proof-tag">
-                  <Icon size={16} weight="fill" />
-                  {tag}
-                </span>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
-                </div>
-                <p className="proof-impact">{impact}</p>
-                <div className="proof-stack" aria-label={`${title} tech stack`}>
-                  {stack.map((tech) => (
-                    <span key={tech}>{tech}</span>
-                  ))}
-                </div>
+            <li className={`srow srow-${status}`} key={platform}>
+              {href ? (
                 <a href={href} target="_blank" rel="noreferrer">
-                  {action}
-                  <ArrowRight size={16} weight="bold" />
+                  {inner}
                 </a>
-              </div>
-              <div className="proof-visual">
-                <img src={image} alt={`${title} visual preview`} />
-              </div>
-            </article>
+              ) : (
+                <span className="srow-inner">{inner}</span>
+              )}
+            </li>
           );
         })}
-      </div>
-    </section>
+      </ul>
+    </div>
   );
 }
 
 function AboutSection() {
   return (
-    <section className="about-section" id="about" aria-labelledby="about-title">
-      <div className="section-heading">
-        <p><span className="section-index">03</span>About</p>
-        <h2 id="about-title">The person behind the model.</h2>
-      </div>
-      <div className="about-layout" data-reveal="">
-        <div className="about-bio">
-          {about.bio.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+    <section className="about" id="about" aria-labelledby="about-title">
+      <div className="about-left">
+        <p className="section-kicker" data-reveal="">
+          ABOUT — 01
+        </p>
+        <h2 className="section-title" id="about-title" data-reveal="">
+          About me
+        </h2>
+        <div className="about-bio" data-reveal="">
+          {about.bio.map((line) => (
+            <p key={line.slice(0, 12)}>{line}</p>
           ))}
         </div>
-        <dl className="about-facts">
-          {about.facts.map(({ label, value }) => (
+        <dl className="about-specs" data-reveal="">
+          {about.specs.map(({ label, value }) => (
             <div key={label}>
               <dt>{label}</dt>
               <dd>{value}</dd>
@@ -447,40 +263,19 @@ function AboutSection() {
           ))}
         </dl>
       </div>
-    </section>
-  );
-}
-
-function SkillSystemSection() {
-  return (
-    <section className="skill-os-section" aria-labelledby="skill-os-title">
-      <div className="section-heading">
-        <p><span className="section-index">02</span>Skill OS</p>
-        <h2 id="skill-os-title">The adapters behind the outputs.</h2>
-      </div>
-      <div className="skill-os-grid">
-        {skillSystems.map((skill, index) => (
-          <article
-            className="skill-row"
-            key={skill.name}
-            data-reveal=""
-            style={{ animationDelay: `${index * 60}ms` }}
-          >
-            <span>{skill.index}</span>
-            <div>
-              <h3>{skill.name}</h3>
-              <p>{skill.input}</p>
-            </div>
-            <div>
-              <small>Loop</small>
-              <strong>{skill.loop}</strong>
-            </div>
-            <div>
-              <small>Output</small>
-              <strong>{skill.output}</strong>
-            </div>
-          </article>
-        ))}
+      <div className="about-right">
+        <div className="flow" data-reveal="" aria-label="工作循环：写、建、淀">
+          {about.flow.map(({ zh, en }, index) => (
+            <span className="flow-step" key={en}>
+              {index > 0 && <span className="flow-link" aria-hidden="true" />}
+              <span className="flow-node">
+                <b>{zh}</b>
+                <small>{en}</small>
+              </span>
+            </span>
+          ))}
+        </div>
+        <SignalBoard />
       </div>
     </section>
   );
@@ -491,13 +286,30 @@ function getHashSlug() {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
+function formatDate(date) {
+  return (date || "").replaceAll("-", ".");
+}
+
+function PostMeta({ post }) {
+  return (
+    <div className="post-meta">
+      <span className="post-tag">{post.adapter}</span>
+      <i className="dotsep" aria-hidden="true" />
+      <span>{formatDate(post.date)}</span>
+      <i className="dotsep" aria-hidden="true" />
+      <span>{post.readingTime}</span>
+    </div>
+  );
+}
+
 function WritingSection() {
   const [selectedSlug, setSelectedSlug] = useState(() => {
     const slug = getHashSlug();
-    return slug && posts.some((post) => post.slug === slug) ? slug : featuredPost.slug;
+    return slug && posts.some((post) => post.slug === slug) ? slug : null;
   });
+  const [showAll, setShowAll] = useState(false);
   const selectedPost = useMemo(
-    () => posts.find((post) => post.slug === selectedSlug) || featuredPost,
+    () => posts.find((post) => post.slug === selectedSlug) || null,
     [selectedSlug],
   );
 
@@ -509,19 +321,30 @@ function WritingSection() {
       const slug = getHashSlug();
       if (slug && posts.some((post) => post.slug === slug)) {
         setSelectedSlug(slug);
+        document.getElementById("writing")?.scrollIntoView();
+      } else {
+        setSelectedSlug(null);
       }
     };
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  const selectPost = (slug) => {
+  const openPost = (slug) => {
     setSelectedSlug(slug);
     window.history.replaceState(null, "", `#post/${slug}`);
+    document.getElementById("writing")?.scrollIntoView();
+  };
+
+  const closePost = () => {
+    setSelectedSlug(null);
+    window.history.replaceState(null, "", "#writing");
+    document.getElementById("writing")?.scrollIntoView();
   };
 
   const [copied, setCopied] = useState(false);
   const copyLink = async () => {
+    if (!selectedPost) return;
     const url = `${window.location.origin}${window.location.pathname}#post/${selectedPost.slug}`;
     try {
       await navigator.clipboard.writeText(url);
@@ -532,104 +355,304 @@ function WritingSection() {
     }
   };
 
+  const listPosts = posts.filter((post) => post.slug !== featuredPost.slug);
+  const visiblePosts = showAll ? listPosts : listPosts.slice(0, 3);
+
   return (
-    <section className="writing-section" id="writing" aria-labelledby="writing-title">
-      <div className="writing-heading">
-        <div>
-          <p><span className="section-index">04</span>Markdown writing</p>
-          <h2 id="writing-title">The training log stays public.</h2>
-        </div>
-        <div className="writing-tracks" aria-label="Writing tracks">
-          {writingTracks.map((track) => (
-            <div key={track.name}>
-              <strong>{track.count}</strong>
-              <span>{track.name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+    <section className="writing" id="writing" aria-labelledby="writing-title">
+      <SectionHead index="02" kicker="WRITING" title="Writing">
+        <p className="section-note" data-reveal="">
+          写 — WRITE · 先在这里沉淀
+          <br />
+          再分发到 GitHub / 小红书
+        </p>
+      </SectionHead>
 
-      <div className="writing-layout">
-        <div className="post-list" aria-label="Articles">
-          {posts.map((post, index) => (
-            <button
-              className={post.slug === selectedPost.slug ? "active" : ""}
-              key={post.slug}
-              type="button"
-              onClick={() => selectPost(post.slug)}
-            >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <small>{post.type} / {post.adapter} / {post.readingTime}</small>
-                <strong>{post.title}</strong>
-                <p>{post.summary}</p>
+      <AnimatePresence mode="wait" initial={false}>
+        {selectedPost ? (
+          <m.article
+            className="post-reader"
+            key={selectedPost.slug}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.24, ease: easeOutStrong }}
+          >
+            <div className="reader-bar">
+              <button className="btn-back" type="button" onClick={closePost}>
+                <ArrowLeft size={14} weight="bold" /> 全部文章
+              </button>
+              <div className="reader-meta">
+                <span>{selectedPost.status}</span>
+                <span>{formatDate(selectedPost.date)}</span>
+                <span>{selectedPost.readingTime}</span>
+                <button className="copy-link" type="button" onClick={copyLink}>
+                  {copied ? <CheckCircle size={14} weight="fill" /> : <Link size={14} />}
+                  {copied ? "Copied" : "Copy link"}
+                </button>
               </div>
+            </div>
+            <h3 className="reader-title">{selectedPost.title}</h3>
+            <p className="reader-summary">{selectedPost.summary}</p>
+            <div className="reader-tags">
+              {selectedPost.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+            <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
+              <MarkdownBody content={selectedPost.content} />
+            </Suspense>
+          </m.article>
+        ) : (
+          <m.div
+            className="writing-grid"
+            key="grid"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.24, ease: easeOutStrong }}
+          >
+            <button className="feat" type="button" onClick={() => openPost(featuredPost.slug)} data-reveal="">
+              <span className="feat-idx">01</span>
+              <h3 className="feat-title">{featuredPost.title}</h3>
+              <p className="feat-dek">{featuredPost.summary}</p>
+              <PostMeta post={featuredPost} />
+              <span className="feat-read">
+                阅读 <ArrowRight size={14} weight="bold" />
+              </span>
             </button>
-          ))}
-        </div>
 
-        <AnimatePresence mode="wait" initial={false}>
-        <m.article
-          className="post-reader"
-          key={selectedPost.slug}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.22, ease: easeOutStrong }}
-        >
-          <div className="post-reader-meta">
-            <span>{selectedPost.status}</span>
-            <span>{selectedPost.date}</span>
-            <span>{selectedPost.readingTime}</span>
-            <button className="copy-link" type="button" onClick={copyLink}>
-              {copied ? <CheckCircle size={14} weight="fill" /> : <Link size={14} />}
-              {copied ? "Copied" : "Copy link"}
-            </button>
-          </div>
-          <h3>{selectedPost.title}</h3>
-          <p className="post-summary">{selectedPost.summary}</p>
-          <div className="post-tags">
-            {selectedPost.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
-          <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
-            <MarkdownBody content={selectedPost.content} />
-          </Suspense>
-        </m.article>
-        </AnimatePresence>
+            <div className="writing-list">
+              {visiblePosts.map((post, index) => (
+                <button
+                  className="wpost"
+                  type="button"
+                  key={post.slug}
+                  onClick={() => openPost(post.slug)}
+                  data-reveal=""
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <span className="wpost-idx">{String(index + 2).padStart(2, "0")}</span>
+                  <span className="wpost-body">
+                    <strong className="wpost-title">{post.title}</strong>
+                    <PostMeta post={post} />
+                  </span>
+                  <ArrowUpRight className="wpost-arr" size={16} weight="bold" />
+                </button>
+              ))}
+              {listPosts.length > 3 && (
+                <button className="writing-all" type="button" onClick={() => setShowAll((value) => !value)}>
+                  {showAll ? "收起" : `全部文章 ${posts.length} 篇`} <ArrowRight size={14} weight="bold" />
+                </button>
+              )}
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
+function SkillsSection() {
+  return (
+    <section className="skills" id="skills" aria-labelledby="skills-title">
+      <SectionHead index="03" kicker="SKILLS" title="Skills">
+        <p className="section-note" data-reveal="">
+          淀 — DISTILL · 把重复的工作方式
+          <br />
+          沉淀成可安装的 skill
+        </p>
+      </SectionHead>
+      <div className="skill-list">
+        {skills.map(({ index, name, zh, desc, status, href, post }, i) => (
+          <article className="skill-row" key={name} data-reveal="" style={{ animationDelay: `${i * 50}ms` }}>
+            <span className="skill-idx">{index}</span>
+            <div className="skill-main">
+              <h3>
+                {zh}
+                <code>{name}</code>
+              </h3>
+              <p>{desc}</p>
+            </div>
+            <div className="skill-side">
+              <span className={`status-pill status-${status}`}>
+                {status === "live" ? "LIVE" : "SOON"}
+              </span>
+              <span className="skill-links">
+                {href && (
+                  <a href={href} target="_blank" rel="noreferrer">
+                    源码 <ArrowUpRight size={13} weight="bold" />
+                  </a>
+                )}
+                {post && (
+                  <a href={`#post/${post}`}>
+                    文章 <ArrowRight size={13} weight="bold" />
+                  </a>
+                )}
+              </span>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );
 }
 
-function Footer() {
+const gitlog = [
+  { hash: "28722ce", msg: "feat: monad editorial restyle" },
+  { hash: "08fd333", msg: "feat: motion interactions" },
+  { hash: "8b870ab", msg: "feat: ai-design skill" },
+  { hash: "HEAD", msg: "build: in public", head: true },
+];
+
+function BuildSection() {
   return (
-    <footer className="site-footer" id="contact">
-      <div className="footer-cta">
-        <p><span className="section-index">05</span>Contact</p>
-        <h2>Let's build something meaningful.</h2>
-        <p className="footer-note">
-          Open to AI product and engineering roles. The fastest way to reach me is email.
+    <section className="build" id="build" aria-labelledby="build-title">
+      <SectionHead index="04" kicker="BUILD" title="Build">
+        <p className="section-note" data-reveal="">
+          建 — BUILD · 公开建造中
+          <br />
+          本站源码也在 GitHub
         </p>
-        <a className="primary-action" href={`mailto:${profile.email}`}>
-          <EnvelopeSimple size={18} weight="regular" />
-          {profile.email}
+      </SectionHead>
+
+      <div className="build-layout">
+        <div className="build-list">
+          {projects.map(({ tag, title, body, impact, stack, href, status }, index) => (
+            <a
+              className="project-row"
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              key={title}
+              data-reveal=""
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <span className="project-idx">{String(index + 1).padStart(2, "0")}</span>
+              <div className="project-main">
+                <h3>
+                  {title}
+                  <span className="project-tag">{tag}</span>
+                </h3>
+                <p>{body}</p>
+                <p className="project-impact">{impact}</p>
+              </div>
+              <div className="project-side">
+                <span className={`status-pill status-${status === "SHIPPED" ? "live" : "soon"}`}>{status}</span>
+                <span className="project-stack">{stack.join(" · ")}</span>
+                <ArrowUpRight className="project-arr" size={16} weight="bold" />
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <aside className="build-aside" data-reveal="" aria-hidden="true">
+          <div className="gitlog">
+            <span className="gitlog-branch">⊖ main ——</span>
+            {gitlog.map(({ hash, msg, head }) => (
+              <span className={`gitlog-row${head ? " gitlog-head" : ""}`} key={hash}>
+                <i />
+                <b>{hash}</b>
+                <em>{msg}</em>
+              </span>
+            ))}
+          </div>
+          <div className="queue">
+            <span className="queue-label">queued {"{"}</span>
+            <ul>
+              {queued.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <span className="queue-label">{"}"}</span>
+          </div>
+          <a
+            className="build-cta"
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer"
+            aria-hidden="false"
+          >
+            <GithubLogo size={15} weight="fill" /> 在 GitHub 围观 <ArrowRight size={14} weight="bold" />
+          </a>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function ContactSection() {
+  return (
+    <section className="contact" id="contact" aria-labelledby="contact-title">
+      <div className="contact-center">
+        <p className="contact-kicker" data-reveal="">
+          <span className="ln" aria-hidden="true" />
+          GET IN TOUCH / 联系
+          <span className="ln" aria-hidden="true" />
+        </p>
+        <h2 className="contact-title" id="contact-title" data-reveal="">
+          Let's talk.
+          <svg className="contact-underline" viewBox="0 0 360 18" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M12 13 Q 180 3, 348 11" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+          </svg>
+        </h2>
+        <p className="contact-sub" data-reveal="">
+          聊聊 AI 产品、Agent，或者一起把想法做出来。
+        </p>
+        <p className="contact-status" data-reveal="">
+          <span className="pulse" aria-hidden="true" />
+          当前开放机会 · Available
+        </p>
+      </div>
+
+      <div className="contact-marquee" aria-hidden="true">
+        <div className="marquee-track">
+          <span>{marquee.repeat(4)}</span>
+          <span>{marquee.repeat(4)}</span>
+        </div>
+      </div>
+
+      <div className="contact-bar">
+        <a className="cbar-item" href={`mailto:${profile.email}`}>
+          <span className="cbar-label">EMAIL</span>
+          <span className="cbar-value">{profile.email}</span>
+          <ArrowRight className="cbar-arr" size={15} weight="bold" />
         </a>
+        <a className="cbar-item" href={profile.x} target="_blank" rel="noreferrer">
+          <span className="cbar-label">
+            <XLogo size={14} weight="bold" /> X
+          </span>
+          <span className="cbar-value">{profile.xHandle}</span>
+          <ArrowRight className="cbar-arr" size={15} weight="bold" />
+        </a>
+        <a className="cbar-item" href={profile.github} target="_blank" rel="noreferrer">
+          <span className="cbar-label">
+            <GithubLogo size={14} weight="fill" /> GITHUB
+          </span>
+          <span className="cbar-value">{profile.githubHandle}</span>
+          <ArrowRight className="cbar-arr" size={15} weight="bold" />
+        </a>
+        <div className="cbar-item cbar-soon">
+          <span className="cbar-label">
+            <ChatCircleDots size={14} weight="fill" /> 微信 / 小红书
+          </span>
+          <span className="cbar-value">内容分发筹备中</span>
+          <span className="cbar-tag">SOON</span>
+        </div>
       </div>
-      <div className="footer-links">
-        <a href={profile.github}><GithubLogo size={20} weight="fill" /> GitHub</a>
-        <a href={profile.x}><XLogo size={18} weight="bold" /> X / @Yeshujing</a>
-        <a href={profile.website}><Link size={19} /> smileflow.cn</a>
-        <span>© 2026 Smile Hu · React + Vite · posts in Markdown</span>
-      </div>
-    </footer>
+
+      <footer className="site-footer">
+        <span>© 2026 Smile Hu · React + Vite · 内容用 Markdown 维护</span>
+        <a href="#top" className="to-top">
+          回到顶部 ↑
+        </a>
+      </footer>
+    </section>
   );
 }
 
 function useRevealOnScroll() {
   useEffect(() => {
-    const elements = document.querySelectorAll("[data-reveal]");
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -641,8 +664,18 @@ function useRevealOnScroll() {
       },
       { threshold: 0.12, rootMargin: "0px 0px -40px" },
     );
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    const observe = () => {
+      document.querySelectorAll("[data-reveal]:not(.revealed)").forEach((element) => {
+        observer.observe(element);
+      });
+    };
+    observe();
+    const mutationObserver = new MutationObserver(observe);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
   }, []);
 }
 
@@ -650,17 +683,15 @@ export function App() {
   useRevealOnScroll();
   return (
     <LazyMotion features={domAnimation} strict>
+      <PageDecor />
       <main>
         <Nav />
-        <section className="hero-section" id="top">
-          <HeroCopy />
-          <TrainingPanel />
-        </section>
-        <ProofSection />
-        <SkillSystemSection />
+        <Hero />
         <AboutSection />
         <WritingSection />
-        <Footer />
+        <SkillsSection />
+        <BuildSection />
+        <ContactSection />
       </main>
     </LazyMotion>
   );

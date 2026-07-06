@@ -1,7 +1,8 @@
 # Smile Personal Website
 
-Personal site for Smile Hu, built as a product-model style portfolio:
-pre-training (education) → fine-tuning (projects) → outputs (products, OSS, writing) → evaluation loop.
+Smile Hu 的个人积累与分发平台：宣传自己 + 沉淀影响力。
+循环是 写 WRITE（文章）→ 建 BUILD（产品）→ 淀 DISTILL（skill），内容先在这里沉淀，再分发到 GitHub / 小红书等平台。
+排版是编辑大刊风格（参考 [sac-ai.com](https://github.com/Sac-Y/sac-ai.com)），视觉 token 遵循 `docs/design-reference.md`（Monad）。
 
 ## Stack
 
@@ -28,8 +29,8 @@ npm run preview  # serve the production build locally
    title: "文章标题"
    slug: "my-post"            # 可选，默认取文件名；分享链接是 /#post/<slug>
    date: "2026-07-04"         # 决定列表排序（新的在前）
-   type: "Essay"              # Essay=思考 / Build=构建笔记 / Skill=方法论，影响顶部的统计
-   adapter: "Agent Workflows" # 关联的方向标签
+   type: "Essay"              # Essay=思考 / Build=构建笔记 / Skill=方法论
+   adapter: "Agent Workflows" # 列表 meta 里显示的方向标签
    summary: "列表和文章顶部显示的一句话摘要"
    tags: ["标签1", "标签2"]
    readingTime: "6 min"
@@ -44,8 +45,10 @@ npm run preview  # serve the production build locally
 
 ## 怎么改站点内容
 
-个人信息、hero 数据条、项目卡片、About 区块都集中在 `src/content/site.js`，
-直接改字段即可，不用动组件。标了 `[MOCK]` 的数字和链接是占位符，替换成真实数据。
+个人信息、About、全平台信号台（channels）、Skills、项目（projects）、排队清单（queued）
+都集中在 `src/content/site.js`，直接改字段即可，不用动组件。
+标了 `[MOCK]` 的数字和链接是占位符，替换成真实数据。
+新开一个平台账号时，把 `channels` 里对应条目的 `status` 从 `"soon"` 改成 `"live"` 并补上 `href`。
 
 ## Structure
 

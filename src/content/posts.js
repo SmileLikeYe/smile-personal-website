@@ -73,21 +73,3 @@ export const posts = Object.entries(modules)
   .sort((a, b) => new Date(b.date) - new Date(a.date));
 
 export const featuredPost = posts.find((post) => post.featured) || posts[0];
-
-export const writingTracks = [
-  {
-    name: "Skill logs",
-    description: "Reusable operating patterns: Codex loops, agent workflows, evaluation habits.",
-    count: posts.filter((post) => post.type === "Skill").length,
-  },
-  {
-    name: "Build notes",
-    description: "Products shipped across PIN AI, mobile AI, and benchmark infrastructure.",
-    count: posts.filter((post) => post.type === "Build").length,
-  },
-  {
-    name: "Model thoughts",
-    description: "How I think about context, harmless agents, local runtime, and product taste.",
-    count: posts.filter((post) => post.type === "Essay").length,
-  },
-];
