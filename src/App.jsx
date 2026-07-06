@@ -2,19 +2,27 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  BracketsCurly,
+  ChartLineUp,
   ChatCircleDots,
   CheckCircle,
+  Cube,
   EnvelopeSimple,
   GithubLogo,
   Globe,
   Link,
+  Notepad,
+  Phone,
+  Pulse,
+  RocketLaunch,
+  Stack,
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, LazyMotion, domAnimation, m } from "motion/react";
 import { featuredPost, posts } from "./content/posts";
-import { about, channels, marquee, model, profile, projects, queued, skills } from "./content/site";
+import { about, channels, marquee, profile, projects, queued, skills } from "./content/site";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
@@ -162,62 +170,127 @@ function Hero() {
           </a>
         </m.div>
       </div>
-      <ModelCard />
+      <TrainingPanel />
     </m.section>
   );
 }
 
-const modelCardStagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.45 } },
-};
+const pretraining = [
+  "Computer Science",
+  "Algorithms & Systems",
+  "Databases",
+  "Compilers",
+  "AI Foundations",
+];
 
-const modelRow = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: easeOutStrong } },
-};
+const adapters = [
+  { title: "PIN AI", subtitle: "Assistant", icon: Cube },
+  { title: "MTEB", subtitle: "Eval", icon: ChartLineUp },
+  { title: "Mobile AI", subtitle: "Runtime", icon: Phone },
+  { title: "Codex Skills", subtitle: "Loops", icon: TerminalWindow },
+  { title: "Agent Workflows", subtitle: "Workflow", icon: BracketsCurly },
+];
 
-function ModelCard() {
+const contextItems = ["User needs", "Product problems", "Codebase", "Research", "Feedback"];
+
+const outputs = [
+  { title: "Products", subtitle: "PIN AI, PINLOB", icon: RocketLaunch, href: "#build" },
+  { title: "Open Source", subtitle: "PRs & contributions", icon: GithubLogo, href: "#build" },
+  { title: "Writing", subtitle: "Markdown posts", icon: Notepad, href: "#writing" },
+  { title: "Systems", subtitle: "Skills & tools", icon: Stack, href: "#skills" },
+];
+
+function TrainingPanel() {
   return (
-    <m.aside className="model-card" variants={modelCardStagger} aria-label="Smile Hu 模型规格卡">
-      <m.div className="mc-head" variants={modelRow}>
-        <span>{model.id}</span>
-        <i className="mc-dot" aria-hidden="true" />
-      </m.div>
-      <m.div className="mc-row" variants={modelRow}>
-        <small>CONTEXT IN</small>
-        <p>{model.context.join(" · ")}</p>
-      </m.div>
-      <m.span className="mc-link" variants={modelRow} aria-hidden="true" />
-      <m.figure className="mc-core" variants={modelRow}>
-        <span className="mc-frame">
-          <img src="/assets/smile-hu-portrait.jpg" alt="Smile Hu" />
-          <span className="portrait-cross portrait-cross-tl" aria-hidden="true" />
-          <span className="portrait-cross portrait-cross-br" aria-hidden="true" />
-        </span>
-        <figcaption>
-          <b>{model.grade}</b>
-          <small>{model.pretrain}</small>
-        </figcaption>
-      </m.figure>
-      <m.span className="mc-link" variants={modelRow} aria-hidden="true" />
-      <m.div className="mc-row" variants={modelRow}>
-        <small>ADAPTERS</small>
-        <span className="mc-chips">
-          {model.adapters.map((adapter) => (
-            <span key={adapter}>{adapter}</span>
+    <section className="training-panel" aria-label="Smile Hu as a large model">
+      <img
+        className="training-flow-background"
+        src="/assets/diagram/model-flow-background-portrait.png"
+        alt=""
+        aria-hidden="true"
+      />
+      <div className="panel-wash" aria-hidden="true" />
+      <div className="model-pulse-anchor" aria-hidden="true">
+        <m.div
+          className="model-pulse"
+          animate={{ opacity: [0.12, 0.34, 0.12], scale: [0.92, 1.1, 0.92] }}
+          transition={{ duration: 3.8, ease: "easeInOut", repeat: Infinity }}
+        />
+      </div>
+
+      <div className="pretraining panel-step">
+        <span className="step-index blue">01</span>
+        <h2>Pre-training</h2>
+        <p>Foundation</p>
+        <strong>Tongji University<br />Computer Science</strong>
+        <div className="stack-list">
+          {pretraining.map((item) => (
+            <button type="button" key={item}>{item}</button>
           ))}
-        </span>
-      </m.div>
-      <m.span className="mc-link" variants={modelRow} aria-hidden="true" />
-      <m.div className="mc-row" variants={modelRow}>
-        <small>OUTPUTS</small>
-        <p>{model.outputs.join(" · ")}</p>
-      </m.div>
-      <m.div className="mc-foot" variants={modelRow}>
-        {model.evalLoop}
-      </m.div>
-    </m.aside>
+        </div>
+      </div>
+
+      <div className="model-core" aria-label="Smile Hu model core">
+        <div className="core-title">
+          <h2>Smile Hu</h2>
+          <p>A-level Product Model</p>
+        </div>
+        <img className="model-photo" src="/assets/smile-hu-portrait.jpg" alt="Smile Hu portrait" />
+      </div>
+
+      <div className="finetuning panel-step">
+        <span className="step-index green">02</span>
+        <h2>Fine-tuning</h2>
+        <p>Adapters</p>
+        <div className="adapter-list">
+          {adapters.map(({ title, subtitle, icon: Icon }) => (
+            <button className="adapter" type="button" key={title}>
+              <Icon size={23} weight="duotone" />
+              <span>
+                <strong>{title}</strong>
+                <small>{subtitle}</small>
+              </span>
+              <CheckCircle size={18} weight="fill" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="runtime-context">
+        <span className="step-index blue">03</span>
+        <h2>Runtime Context</h2>
+        <p>Real-world input</p>
+        <div>
+          {contextItems.map((item) => (
+            <button type="button" key={item}>{item}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="outputs">
+        <span className="step-index red">04</span>
+        <h2>Outputs</h2>
+        <p>Shipped value</p>
+        <div className="output-list">
+          {outputs.map(({ title, subtitle, icon: Icon, href }) => (
+            <a href={href} key={title}>
+              <Icon size={22} weight="duotone" />
+              <span>
+                <strong>{title}</strong>
+                <small>{subtitle}</small>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div className="eval-loop">
+        <span className="step-index amber">05</span>
+        <h2>Evaluation Loop</h2>
+        <p>Observe → Evaluate → Improve → Ship</p>
+        <Pulse size={36} weight="duotone" />
+      </div>
+    </section>
   );
 }
 

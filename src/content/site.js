@@ -14,17 +14,6 @@ export const profile = {
   slogan: ["把 AI 能力打磨成能交付的产品", "把过程沉淀成公开的文章与 skill"],
 };
 
-// Hero 右侧的"模型规格卡"：把 Smile Hu 当成一个大模型来标注
-export const model = {
-  id: "MODEL // SMILE-HU",
-  grade: "A-LEVEL PRODUCT MODEL",
-  context: ["用户需求", "产品问题", "代码库"],
-  pretrain: "PRE-TRAIN : 同济 CS",
-  adapters: ["PIN AI", "MTEB", "MOBILE", "AI DESIGN"],
-  outputs: ["产品", "OSS", "文章", "SKILL"],
-  evalLoop: "EVAL LOOP : observe → improve → ship",
-};
-
 // About 区块
 export const about = {
   bio: [
