@@ -14,7 +14,7 @@ import {
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, LazyMotion, domAnimation, m } from "motion/react";
 import { featuredPost, posts } from "./content/posts";
-import { about, channels, marquee, profile, projects, queued, skills } from "./content/site";
+import { about, channels, marquee, model, profile, projects, queued, skills } from "./content/site";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
@@ -162,19 +162,62 @@ function Hero() {
           </a>
         </m.div>
       </div>
-      <m.figure className="hero-portrait" variants={heroItem}>
-        <span className="portrait-frame">
-          <img src="/assets/smile-hu-portrait.jpg" alt="Smile Hu 档案照" />
+      <ModelCard />
+    </m.section>
+  );
+}
+
+const modelCardStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.45 } },
+};
+
+const modelRow = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: easeOutStrong } },
+};
+
+function ModelCard() {
+  return (
+    <m.aside className="model-card" variants={modelCardStagger} aria-label="Smile Hu 模型规格卡">
+      <m.div className="mc-head" variants={modelRow}>
+        <span>{model.id}</span>
+        <i className="mc-dot" aria-hidden="true" />
+      </m.div>
+      <m.div className="mc-row" variants={modelRow}>
+        <small>CONTEXT IN</small>
+        <p>{model.context.join(" · ")}</p>
+      </m.div>
+      <m.span className="mc-link" variants={modelRow} aria-hidden="true" />
+      <m.figure className="mc-core" variants={modelRow}>
+        <span className="mc-frame">
+          <img src="/assets/smile-hu-portrait.jpg" alt="Smile Hu" />
           <span className="portrait-cross portrait-cross-tl" aria-hidden="true" />
           <span className="portrait-cross portrait-cross-br" aria-hidden="true" />
         </span>
-        <figcaption className="portrait-caption">
-          {profile.idCaption.map((line) => (
-            <span key={line}>{line}</span>
-          ))}
+        <figcaption>
+          <b>{model.grade}</b>
+          <small>{model.pretrain}</small>
         </figcaption>
       </m.figure>
-    </m.section>
+      <m.span className="mc-link" variants={modelRow} aria-hidden="true" />
+      <m.div className="mc-row" variants={modelRow}>
+        <small>ADAPTERS</small>
+        <span className="mc-chips">
+          {model.adapters.map((adapter) => (
+            <span key={adapter}>{adapter}</span>
+          ))}
+        </span>
+      </m.div>
+      <m.span className="mc-link" variants={modelRow} aria-hidden="true" />
+      <m.div className="mc-row" variants={modelRow}>
+        <small>OUTPUTS</small>
+        <p>{model.outputs.join(" · ")}</p>
+      </m.div>
+      <m.div className="mc-foot" variants={modelRow}>
+        {model.evalLoop}
+      </m.div>
+    </m.aside>
   );
 }
 

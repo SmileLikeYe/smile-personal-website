@@ -397,24 +397,149 @@ main {
   transform: translateX(3px);
 }
 
-.hero-portrait {
-  margin: 0;
+/* Hero 右侧模型规格卡 */
+.model-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   justify-self: end;
-}
-
-.portrait-frame {
-  position: relative;
-  display: block;
-  width: clamp(200px, 19vw, 280px);
-  padding: 10px;
+  width: clamp(272px, 23vw, 324px);
+  padding: 0 0 4px;
   background: var(--panel);
   border: 1px solid var(--line);
 }
 
-.portrait-frame img {
+.mc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 18px;
+  margin-bottom: 16px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+}
+
+.mc-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--blue);
+  border-radius: 50%;
+  animation: pulse-dot 2.6s ease-in-out infinite;
+}
+
+.mc-row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: center;
+  padding: 0 18px;
+  text-align: center;
+}
+
+.mc-row small {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+}
+
+.mc-row p {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text);
+}
+
+.mc-link {
+  align-self: center;
+  width: 1px;
+  height: 16px;
+  margin: 10px 0;
+  background: var(--line);
+  position: relative;
+}
+
+.mc-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: -2px;
+  width: 5px;
+  height: 5px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.mc-core {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin: 0;
+  padding: 0 18px;
+}
+
+.mc-frame {
+  position: relative;
+  display: block;
+  width: clamp(120px, 10vw, 148px);
+  padding: 7px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.mc-frame img {
   display: block;
   width: 100%;
   filter: saturate(0.86) contrast(0.98) sepia(0.08);
+}
+
+.mc-core figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  text-align: center;
+}
+
+.mc-core b {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+}
+
+.mc-core small {
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.mc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.mc-chips span {
+  padding: 3px 9px;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.mc-foot {
+  margin-top: 18px;
+  padding: 11px 18px 9px;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-align: center;
+  color: var(--muted);
+  border-top: 1px solid var(--soft-line);
 }
 
 .portrait-cross {
@@ -452,16 +577,6 @@ main {
 .portrait-cross-br {
   right: -8px;
   bottom: -8px;
-}
-
-.portrait-caption {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  margin-top: 12px;
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  color: var(--muted);
 }
 
 /* ───── 区块公共 ───── */
@@ -1615,7 +1730,7 @@ a.cbar-item:hover .cbar-arr {
     padding-top: 48px;
   }
 
-  .hero-portrait {
+  .model-card {
     justify-self: start;
   }
 
