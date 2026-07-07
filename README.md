@@ -1,8 +1,8 @@
 # Smile Personal Website
 
-Smile Hu 的个人积累与分发平台：宣传自己 + 沉淀影响力。
-循环是 写 WRITE（文章）→ 建 BUILD（产品）→ 淀 DISTILL（skill），内容先在这里沉淀，再分发到 GitHub / 小红书等平台。
-排版是编辑大刊风格（参考 [sac-ai.com](https://github.com/Sac-Y/sac-ai.com)），视觉 token 遵循 `docs/design-reference.md`（Monad）。
+Smile Hu 的原创个人网站，用来集中展示个人介绍、文章、项目、技能和正在构建的产品系统。
+
+这个站点的核心思路是把个人成长过程产品化：写作沉淀观点，项目展示交付能力，技能和工作流记录方法，最终形成一个持续更新的个人能力主页。
 
 ## Stack
 
@@ -49,6 +49,12 @@ npm run preview  # serve the production build locally
 都集中在 `src/content/site.js`，直接改字段即可，不用动组件。
 标了 `[MOCK]` 的数字和链接是占位符，替换成真实数据。
 新开一个平台账号时，把 `channels` 里对应条目的 `status` 从 `"soon"` 改成 `"live"` 并补上 `href`。
+
+## Design Direction
+
+网站围绕“个人能力模型”展开：教育和基础能力像 pre-training，真实项目和 AI 产品实践像 fine-tuning，文章、开源贡献、产品交付和方法论是最终输出。
+
+视觉上保持克制、清晰、偏编辑型，让访问者快速理解：我是谁、我在构建什么、我有什么可验证的输出。
 
 ## Structure
 
