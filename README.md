@@ -25,6 +25,8 @@ npm run preview  # serve the production build locally
 
 ## Maintenance
 
+更完整的代码维护说明见 [docs/maintenance.md](docs/maintenance.md)。
+
 ### 本地开发
 
 ```bash
@@ -63,6 +65,12 @@ install dependencies → build → upload dist → deploy pages
 ```
 
 如果绑定 `smileflow.cn`，域名解析和 HTTPS 状态在 GitHub Pages 设置里检查。HTTPS 证书由 GitHub Pages 自动签发和续期。
+
+### 流量统计
+
+站点已接入 Cloudflare Web Analytics。脚本在 `index.html` 里，通过 Cloudflare 的 public beacon snippet 上报基础访问数据。
+
+它不影响当前部署架构：DNS 仍在阿里云，站点仍由 GitHub Pages 托管，Cloudflare 只负责统计。
 
 ## 怎么发布一篇新文章
 
@@ -109,3 +117,4 @@ install dependencies → build → upload dist → deploy pages
 - `src/content/posts.js` — Markdown 文章的加载与 frontmatter 解析
 - `src/styles.css` — 响应式布局与动画系统
 - `public/assets/` — 站点图片资源
+- `docs/maintenance.md` — 代码结构、内容编辑、部署和验证清单
