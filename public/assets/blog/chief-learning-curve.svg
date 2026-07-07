@@ -1,0 +1,58 @@
+<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <style>
+    .lbl { font-size: 12px; fill: #6b6560; letter-spacing: .04em; }
+    .axis { stroke: #d8d2cc; stroke-width: 1; }
+    .grid { stroke: #e7e1db; stroke-width: 1; }
+    .bar { fill: #2b59d1; }
+    .barlo { fill: #c7d0ea; }
+    .val { font-size: 14px; fill: #2b2926; font-weight: 500; }
+    .cap { font-size: 12.5px; fill: #57534f; }
+    .accent { fill: #2b59d1; }
+  </style>
+
+  <text x="40" y="34" class="lbl accent">chief eval --learning</text>
+  <text x="40" y="58" font-family="'Newsreader', Georgia, serif" font-size="22" fill="#2b2926">路由一致率:0% → 100%,2 轮收敛</text>
+
+  <!-- plot area: x 90..710, y 100..300 ; 0..100% -->
+  <!-- gridlines -->
+  <g class="grid">
+    <line x1="90" y1="300" x2="710" y2="300"/>
+    <line x1="90" y1="250" x2="710" y2="250"/>
+    <line x1="90" y1="200" x2="710" y2="200"/>
+    <line x1="90" y1="150" x2="710" y2="150"/>
+    <line x1="90" y1="100" x2="710" y2="100"/>
+  </g>
+  <g class="lbl" text-anchor="end">
+    <text x="80" y="304">0%</text>
+    <text x="80" y="204">50%</text>
+    <text x="80" y="104">100%</text>
+  </g>
+  <line x1="90" y1="100" x2="90" y2="300" class="axis"/>
+
+  <!-- bars: r0=0, r1=86, r2..r5=100 ; each 200px tall = 100% -->
+  <!-- r0 = 0% (nub) -->
+  <rect x="120" y="298" width="70" height="2" class="barlo"/>
+  <text x="155" y="318" class="lbl" text-anchor="middle">r0</text>
+  <text x="155" y="290" class="val" text-anchor="middle">0%</text>
+
+  <!-- r1 = 86% -->
+  <rect x="220" y="128" width="70" height="172" class="barlo"/>
+  <text x="255" y="318" class="lbl" text-anchor="middle">r1</text>
+  <text x="255" y="120" class="val" text-anchor="middle">86%</text>
+
+  <!-- r2..r5 = 100% -->
+  <rect x="320" y="100" width="70" height="200" class="bar"/>
+  <text x="355" y="318" class="lbl" text-anchor="middle">r2</text>
+  <text x="355" y="92" class="val accent" text-anchor="middle">100%</text>
+
+  <rect x="420" y="100" width="70" height="200" class="bar"/>
+  <text x="455" y="318" class="lbl" text-anchor="middle">r3</text>
+
+  <rect x="520" y="100" width="70" height="200" class="bar"/>
+  <text x="555" y="318" class="lbl" text-anchor="middle">r4</text>
+
+  <rect x="620" y="100" width="70" height="200" class="bar"/>
+  <text x="655" y="318" class="lbl" text-anchor="middle">r5</text>
+
+  <text x="90" y="346" class="cap">reward = 👍/👎 反馈 · policy = 按主题加权路由 · training = EMA · 无标注、无梯度</text>
+</svg>

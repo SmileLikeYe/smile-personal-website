@@ -1452,6 +1452,17 @@ section {
   border-top: 1px solid var(--soft-line);
 }
 
+.markdown-body img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 22px 0 8px;
+  padding: 20px 22px;
+  background: #fbfaf8;
+  border: 1px solid var(--soft-line);
+  border-radius: 12px;
+}
+
 .markdown-body p,
 .markdown-body ul,
 .markdown-body ol,

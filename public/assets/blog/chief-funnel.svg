@@ -1,0 +1,49 @@
+<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <style>
+    .lbl { font-size: 12px; fill: #6b6560; letter-spacing: .04em; }
+    .big { font-size: 26px; fill: #2b2926; font-family: 'Newsreader', Georgia, serif; }
+    .num { font-size: 15px; fill: #2b2926; font-weight: 500; }
+    .accent { fill: #2b59d1; }
+    .hair { stroke: #d8d2cc; stroke-width: 1; fill: none; }
+    .hairb { stroke: #2b59d1; stroke-width: 1.4; fill: none; }
+    .note { font-size: 12.5px; fill: #57534f; }
+  </style>
+
+  <!-- input -->
+  <text x="20" y="40" class="lbl">INPUT</text>
+  <text x="20" y="72" class="big">24 events</text>
+  <text x="20" y="96" class="note">agents · CI · RSS · webhooks · heartbeats</text>
+
+  <!-- three funnel stages, narrowing -->
+  <!-- stage 1 -->
+  <rect x="20" y="130" width="710" height="46" rx="8" class="hair"/>
+  <text x="34" y="152" class="lbl accent">STAGE 1 · 硬规则 (µs)</text>
+  <text x="34" y="169" class="note">muted / dedup / quiet-hours / zero-information</text>
+  <text x="712" y="159" class="num" text-anchor="end">↓</text>
+
+  <!-- stage 2 -->
+  <rect x="110" y="196" width="530" height="46" rx="8" class="hair"/>
+  <text x="124" y="218" class="lbl accent">STAGE 2 · 相似度分类器 (ms)</text>
+  <text x="124" y="235" class="note">looks-like-dismissed → drop · looks-like-engaged → route</text>
+
+  <!-- stage 3 -->
+  <rect x="250" y="262" width="250" height="46" rx="8" class="hairb"/>
+  <text x="264" y="284" class="lbl accent">STAGE 3 · LLM 裁判</text>
+  <text x="264" y="301" class="note">只有 25% 的事件到这里</text>
+
+  <!-- callout bracket -->
+  <path d="M 516 262 h 20 v 46 h -20" class="hairb"/>
+  <text x="548" y="281" class="num accent">仅 25%</text>
+  <text x="548" y="299" class="note">付费判断</text>
+
+  <!-- outputs -->
+  <text x="20" y="348" class="lbl">OUTPUT · 5 条路由</text>
+  <g class="num" font-size="14">
+    <text x="150" y="348">🔔 interrupt</text>
+    <text x="285" y="348">📰 digest</text>
+    <text x="400" y="348">🤖 dispatch</text>
+    <text x="525" y="348">📚 curate</text>
+    <text x="640" y="348">🗑 drop</text>
+  </g>
+  <line x1="20" y1="360" x2="740" y2="360" class="hair"/>
+</svg>
