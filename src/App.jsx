@@ -109,7 +109,7 @@ function Nav({ resetKey }) {
         <a className="header-github" href={profile.github} aria-label="GitHub" target="_blank" rel="noreferrer">
           <GithubLogo size={19} weight="fill" />
         </a>
-        <a className="connect-button" href={`mailto:${profile.email}`}>
+        <a className="connect-button" href="#contact">
           Let's connect
           <ArrowRight size={15} weight="bold" />
         </a>
@@ -145,7 +145,7 @@ function Hero() {
           <a className="btn-ghost" href="#writing">
             阅读文章 <ArrowRight size={15} weight="bold" />
           </a>
-          <a className="btn-link" href={`mailto:${profile.email}`}>
+          <a className="btn-link" href="#contact">
             联系我 <ArrowRight size={15} weight="bold" />
           </a>
         </m.div>
@@ -605,6 +605,32 @@ function BuildSection() {
   );
 }
 
+function EmailRow() {
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.prompt("复制邮箱地址:", profile.email);
+    }
+  };
+
+  return (
+    <button className="crow crow-button" type="button" onClick={copyEmail}>
+      <span className="crow-label">
+        {copied ? <CheckCircle size={15} weight="fill" /> : <EnvelopeSimple size={15} weight="regular" />} EMAIL
+      </span>
+      <span className={copied ? "crow-value crow-copied" : "crow-value"}>
+        {copied ? "已复制到剪贴板 ✓" : profile.email}
+      </span>
+      <span className="crow-tag">{copied ? "" : "点击复制"}</span>
+    </button>
+  );
+}
+
 function ContactSection() {
   return (
     <section className="contact" id="contact" aria-labelledby="contact-title">
@@ -628,13 +654,7 @@ function ContactSection() {
           <TypeLine />
         </div>
         <div className="contact-list" data-reveal="">
-          <a className="crow" href={`mailto:${profile.email}`}>
-            <span className="crow-label">
-              <EnvelopeSimple size={15} weight="regular" /> EMAIL
-            </span>
-            <span className="crow-value">{profile.email}</span>
-            <ArrowRight className="crow-arr" size={15} weight="bold" />
-          </a>
+          <EmailRow />
           <a className="crow" href={profile.x} target="_blank" rel="noreferrer">
             <span className="crow-label">
               <XLogo size={14} weight="bold" /> X

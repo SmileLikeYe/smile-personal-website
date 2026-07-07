@@ -2048,6 +2048,27 @@ a.copy-link {
   align-items: center;
 }
 
+.crow-button {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--soft-line);
+}
+
+.crow-button:hover {
+  background: rgba(43, 89, 209, 0.04);
+}
+
+.crow-button:hover .crow-label {
+  color: var(--blue);
+}
+
+.crow-copied {
+  color: var(--green);
+}
+
 /* ───── Hover 微交互 ───── */
 .ckpt-title,
 .project-main h3 {
