@@ -17,10 +17,10 @@ import {
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { AnimatePresence, LazyMotion, domAnimation, m } from "motion/react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { AnimatePresence, LazyMotion, domAnimation, m, useScroll } from "motion/react";
 import { featuredPost, posts } from "./content/posts";
-import { about, endpoints, loop, nowTraining, profile, projects, skills } from "./content/site";
+import { about, endpoints, loop, nowTraining, profile, projects, skills, statusLines } from "./content/site";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
@@ -48,10 +48,11 @@ const navItems = [
   { id: "contact", label: "CONTACT" },
 ];
 
-function Nav() {
+function Nav({ resetKey }) {
   const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
+    setActiveId(null);
     const sections = navItems
       .map(({ id }) => document.getElementById(id))
       .filter(Boolean);
@@ -78,7 +79,7 @@ function Nav() {
       observer.disconnect();
       heroObserver.disconnect();
     };
-  }, []);
+  }, [resetKey]);
 
   return (
     <header className="site-header">
@@ -386,57 +387,6 @@ function PostMeta({ post }) {
 }
 
 function WritingSection() {
-  const [selectedSlug, setSelectedSlug] = useState(() => {
-    const slug = getHashSlug();
-    return slug && posts.some((post) => post.slug === slug) ? slug : null;
-  });
-  const selectedPost = useMemo(
-    () => posts.find((post) => post.slug === selectedSlug) || null,
-    [selectedSlug],
-  );
-
-  useEffect(() => {
-    if (getHashSlug()) {
-      document.getElementById("writing")?.scrollIntoView();
-    }
-    const onHashChange = () => {
-      const slug = getHashSlug();
-      if (slug && posts.some((post) => post.slug === slug)) {
-        setSelectedSlug(slug);
-        document.getElementById("writing")?.scrollIntoView();
-      } else {
-        setSelectedSlug(null);
-      }
-    };
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
-
-  const openPost = (slug) => {
-    setSelectedSlug(slug);
-    window.history.replaceState(null, "", `#post/${slug}`);
-    document.getElementById("writing")?.scrollIntoView();
-  };
-
-  const closePost = () => {
-    setSelectedSlug(null);
-    window.history.replaceState(null, "", "#writing");
-    document.getElementById("writing")?.scrollIntoView();
-  };
-
-  const [copied, setCopied] = useState(false);
-  const copyLink = async () => {
-    if (!selectedPost) return;
-    const url = `${window.location.origin}${window.location.pathname}#post/${selectedPost.slug}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    } catch {
-      window.prompt("Copy this link:", url);
-    }
-  };
-
   return (
     <section className="writing" id="writing" aria-labelledby="writing-title">
       <SectionHead index="02" kicker="WRITING" title="Training Log">
@@ -447,79 +397,103 @@ function WritingSection() {
         </p>
       </SectionHead>
 
-      <AnimatePresence mode="wait" initial={false}>
-        {selectedPost ? (
-          <m.article
-            className="post-reader"
-            key={selectedPost.slug}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.24, ease: easeOutStrong }}
-          >
-            <div className="reader-bar">
-              <button className="btn-back" type="button" onClick={closePost}>
-                <ArrowLeft size={14} weight="bold" /> 全部文章
-              </button>
-              <div className="reader-meta">
-                <span>{selectedPost.status}</span>
-                <span>{formatDate(selectedPost.date)}</span>
-                <span>{selectedPost.readingTime}</span>
-                <button className="copy-link" type="button" onClick={copyLink}>
-                  {copied ? <CheckCircle size={14} weight="fill" /> : <Link size={14} />}
-                  {copied ? "Copied" : "Copy link"}
-                </button>
-              </div>
-            </div>
-            <h3 className="reader-title">{selectedPost.title}</h3>
-            <p className="reader-summary">{selectedPost.summary}</p>
-            <div className="reader-tags">
-              {selectedPost.tags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
-            <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
-              <MarkdownBody content={selectedPost.content} />
-            </Suspense>
-          </m.article>
-        ) : (
-          <m.div
-            className="tlog"
-            key="grid"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.24, ease: easeOutStrong }}
-          >
-            {posts.map((post, index) => {
-              const isFeatured = post.slug === featuredPost.slug;
-              return (
-                <button
-                  className={isFeatured ? "ckpt ckpt-featured" : "ckpt"}
-                  type="button"
-                  key={post.slug}
-                  onClick={() => openPost(post.slug)}
-                  data-reveal=""
-                  style={{ animationDelay: `${index * 45}ms` }}
-                >
-                  <span className="ckpt-id">
-                    ckpt-{String(posts.length - index).padStart(2, "0")}
-                    {isFeatured && <em>★ FEATURED</em>}
-                  </span>
-                  <span className="ckpt-body">
-                    <strong className="ckpt-title">{post.title}</strong>
-                    {isFeatured && <span className="ckpt-dek">{post.summary}</span>}
-                    <PostMeta post={post} />
-                  </span>
-                  <span className="ckpt-date">{formatDate(post.date)}</span>
-                  <ArrowUpRight className="ckpt-arr" size={16} weight="bold" />
-                </button>
-              );
-            })}
-          </m.div>
-        )}
-      </AnimatePresence>
+      <div className="tlog">
+        {posts.map((post, index) => {
+          const isFeatured = post.slug === featuredPost.slug;
+          return (
+            <a
+              className={isFeatured ? "ckpt ckpt-featured" : "ckpt"}
+              href={`#post/${post.slug}`}
+              key={post.slug}
+              data-reveal=""
+              style={{ animationDelay: `${index * 45}ms` }}
+            >
+              <span className="ckpt-id">
+                ckpt-{String(posts.length - index).padStart(2, "0")}
+                {isFeatured && <em>★ FEATURED</em>}
+              </span>
+              <span className="ckpt-body">
+                <strong className="ckpt-title">{post.title}</strong>
+                {isFeatured && <span className="ckpt-dek">{post.summary}</span>}
+                <PostMeta post={post} />
+              </span>
+              <span className="ckpt-date">{formatDate(post.date)}</span>
+              <ArrowUpRight className="ckpt-arr" size={16} weight="bold" />
+            </a>
+          );
+        })}
+      </div>
     </section>
+  );
+}
+
+function PostPage({ post }) {
+  const { scrollYProgress } = useScroll();
+  const [copied, setCopied] = useState(false);
+
+  const copyLink = async () => {
+    const url = `${window.location.origin}${window.location.pathname}#post/${post.slug}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      window.prompt("Copy this link:", url);
+    }
+  };
+
+  const goBack = () => {
+    window.location.hash = "#writing";
+  };
+
+  return (
+    <m.main
+      className="post-page"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.26, ease: easeOutStrong }}
+    >
+      <m.div className="read-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
+      <article className="post-article">
+        <div className="reader-bar">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 全部文章
+          </button>
+          <div className="reader-meta">
+            <span>{post.status}</span>
+            <span>{formatDate(post.date)}</span>
+            <span>{post.readingTime}</span>
+            <button className="copy-link" type="button" onClick={copyLink}>
+              {copied ? <CheckCircle size={14} weight="fill" /> : <Link size={14} />}
+              {copied ? "Copied" : "Copy link"}
+            </button>
+          </div>
+        </div>
+        <h1 className="reader-title">{post.title}</h1>
+        <p className="reader-summary">{post.summary}</p>
+        <div className="reader-tags">
+          {post.tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+        <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
+          <MarkdownBody content={post.content} />
+        </Suspense>
+        <div className="post-page-foot">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 返回全部文章
+          </button>
+          <button
+            className="to-top-btn"
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            回到顶部 ↑
+          </button>
+        </div>
+      </article>
+    </m.main>
   );
 }
 
@@ -640,6 +614,7 @@ function ContactSection() {
             <span className="pulse" aria-hidden="true" />
             当前开放机会 · Available
           </p>
+          <TypeLine />
         </div>
         <div className="contact-list" data-reveal="">
           <a className="crow" href={`mailto:${profile.email}`}>
@@ -672,12 +647,60 @@ function ContactSection() {
       </div>
 
       <footer className="site-footer">
+        <span className="footer-loop">
+          <i className="loop-ring" aria-hidden="true" />
+          eval loop running
+        </span>
         <span>© 2026 Smile Hu · React + Vite · 内容用 Markdown 维护</span>
         <a href="#top" className="to-top">
           回到顶部 ↑
         </a>
       </footer>
     </section>
+  );
+}
+
+function TypeLine() {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setText(statusLines[0]);
+      return undefined;
+    }
+    let line = 0;
+    let char = 0;
+    let deleting = false;
+    let timer;
+    const tick = () => {
+      const full = statusLines[line];
+      if (!deleting) {
+        char += 1;
+        setText(full.slice(0, char));
+        if (char === full.length) {
+          deleting = true;
+          timer = setTimeout(tick, 2400);
+          return;
+        }
+      } else {
+        char -= 1;
+        setText(full.slice(0, char));
+        if (char === 0) {
+          deleting = false;
+          line = (line + 1) % statusLines.length;
+        }
+      }
+      timer = setTimeout(tick, deleting ? 26 : 62);
+    };
+    timer = setTimeout(tick, 900);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <p className="type-line" aria-hidden="true">
+      <span className="type-prompt">$</span> {text}
+      <i className="type-caret" />
+    </p>
   );
 }
 
@@ -709,19 +732,66 @@ function useRevealOnScroll() {
   }, []);
 }
 
+function useHashPost() {
+  const [slug, setSlug] = useState(() => {
+    const initial = getHashSlug();
+    return initial && posts.some((post) => post.slug === initial) ? initial : null;
+  });
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const next = getHashSlug();
+      setSlug(next && posts.some((post) => post.slug === next) ? next : null);
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  return slug ? posts.find((post) => post.slug === slug) : null;
+}
+
 export function App() {
   useRevealOnScroll();
+  const post = useHashPost();
+
+  useEffect(() => {
+    if (post) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [post]);
+
+  // 从文章页返回首页时，等首页挂载完再定位到 Writing 区
+  const onExitComplete = () => {
+    if (!getHashSlug()) {
+      requestAnimationFrame(() => {
+        document.getElementById("writing")?.scrollIntoView({ behavior: "instant" });
+      });
+    }
+  };
+
   return (
     <LazyMotion features={domAnimation} strict>
-      <main>
-        <Nav />
-        <Hero />
-        <AboutSection />
-        <WritingSection />
-        <SkillsSection />
-        <BuildSection />
-        <ContactSection />
-      </main>
+      <Nav resetKey={post ? post.slug : "home"} />
+      <AnimatePresence mode="wait" initial={false} onExitComplete={onExitComplete}>
+        {post ? (
+          <PostPage post={post} key={post.slug} />
+        ) : (
+          <m.main
+            key="home"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          >
+            <Hero />
+            <AboutSection />
+            <WritingSection />
+            <SkillsSection />
+            <BuildSection />
+            <ContactSection />
+          </m.main>
+        )}
+      </AnimatePresence>
     </LazyMotion>
   );
 }

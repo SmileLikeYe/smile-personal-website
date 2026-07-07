@@ -131,3 +131,10 @@ export const projects = [
 
 // Build 区 "now training" 清单（正在路上的东西）
 export const nowTraining = ["skill 市场发布", "小红书内容分发", "个人 AI 记忆系统"];
+
+// Contact 区打字机状态行（循环播放）
+export const statusLines = [
+  "正在训练：小红书内容分发 …",
+  "eval loop running · observe → improve → ship",
+  "open to AI product & engineering roles",
+];
