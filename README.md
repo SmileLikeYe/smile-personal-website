@@ -1,8 +1,12 @@
 # Smile Personal Website
 
-Smile Hu 的原创个人网站，用来集中展示个人介绍、文章、项目、技能和正在构建的产品系统。
+人不是一段静态简介，更像一个在现实里运行的开放系统。
 
-这个站点的核心思路是把个人成长过程产品化：写作沉淀观点，项目展示交付能力，技能和工作流记录方法，最终形成一个持续更新的个人能力主页。
+每天接收新的边界条件，在反馈里校准，在熵增里保留一点秩序，再把理解压缩成产品、文章、工具和更可靠的判断。
+
+这个网站记录的是这条轨迹。它不是作品集的终点，而是一个持续更新的观测面：我如何学习，如何构建，如何把 AI 能力变成可以交付的东西。
+
+如果简历回答的是“我做过什么”，这里更关心“我如何形成判断”。
 
 ## Stack
 
@@ -18,6 +22,47 @@ npm run dev      # local dev server
 npm run build    # production build into dist/
 npm run preview  # serve the production build locally
 ```
+
+## Maintenance
+
+### 本地开发
+
+```bash
+npm install
+npm run dev
+```
+
+默认本地地址通常是：
+
+```text
+http://127.0.0.1:5173/
+```
+
+如果端口被占用，Vite 会自动换到下一个可用端口。
+
+### 上线前检查
+
+```bash
+npm run build
+```
+
+构建产物会输出到 `dist/`。这个站点没有后端，部署时只需要发布 `dist/`。
+
+### 部署
+
+仓库已经配置 GitHub Pages workflow：
+
+```text
+.github/workflows/deploy-pages.yml
+```
+
+推送到 `main` 后会自动执行：
+
+```text
+install dependencies → build → upload dist → deploy pages
+```
+
+如果绑定 `smileflow.cn`，域名解析和 HTTPS 状态在 GitHub Pages 设置里检查。HTTPS 证书由 GitHub Pages 自动签发和续期。
 
 ## 怎么发布一篇新文章
 
