@@ -409,6 +409,29 @@ function getHashRoute() {
   return null;
 }
 
+// 导航栈：记录“从哪来”，返回按钮优先回到来源（Library / 上一篇），
+// 浏览器自带后退通过 oldURL 对比做出栈，避免栈污染。
+const navStack = [];
+let suppressNavPush = false;
+
+function trackNav(oldHash, newHash) {
+  if (suppressNavPush) {
+    suppressNavPush = false;
+    return;
+  }
+  if (navStack.length > 0 && navStack[navStack.length - 1] === newHash) {
+    navStack.pop(); // 浏览器后退：回到了栈顶，出栈
+    return;
+  }
+  navStack.push(oldHash);
+}
+
+function navBack(fallback) {
+  const target = navStack.pop();
+  suppressNavPush = true;
+  window.location.hash = target ? target : fallback;
+}
+
 function formatDate(date) {
   return (date || "").replaceAll("-", ".");
 }
@@ -792,7 +815,7 @@ function PostPage({ post }) {
   };
 
   const goBack = () => {
-    window.location.hash = "#writing";
+    navBack("#writing");
   };
 
   return (
@@ -850,7 +873,7 @@ function SkillPage({ skill }) {
   const { scrollYProgress } = useScroll();
 
   const goBack = () => {
-    window.location.hash = "#skills";
+    navBack("#skills");
   };
 
   return (
@@ -960,7 +983,10 @@ function LibraryPage({ initialTab }) {
               role="tab"
               aria-selected={tab === "posts"}
               className={tab === "posts" ? "active" : ""}
-              onClick={() => setTab("posts")}
+              onClick={() => {
+                setTab("posts");
+                window.history.replaceState(null, "", "#library");
+              }}
             >
               文章 {posts.length}
             </button>
@@ -969,7 +995,10 @@ function LibraryPage({ initialTab }) {
               role="tab"
               aria-selected={tab === "skills"}
               className={tab === "skills" ? "active" : ""}
-              onClick={() => setTab("skills")}
+              onClick={() => {
+                setTab("skills");
+                window.history.replaceState(null, "", "#library/skills");
+              }}
             >
               Skills {skillDocs.length}
             </button>
@@ -1041,7 +1070,14 @@ function useHashRoute() {
   const [route, setRoute] = useState(getHashRoute);
 
   useEffect(() => {
-    const onHashChange = () => setRoute(getHashRoute());
+    const onHashChange = (event) => {
+      try {
+        trackNav(new URL(event.oldURL).hash, new URL(event.newURL).hash);
+      } catch {
+        /* URL 解析失败时跳过栈维护 */
+      }
+      setRoute(getHashRoute());
+    };
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
