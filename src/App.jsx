@@ -164,7 +164,7 @@ const pretraining = [
 
 // 02 Fine-tuning：真实经历，每一条都可点进去验证
 const adapters = [
-  { title: "PIN AI", subtitle: "Chief AI Engineer", icon: Cube, href: "https://www.pinai.com/" },
+  { title: "PIN AI", subtitle: "AI · Agent · 硬件", icon: Cube, href: "https://www.pinai.com/" },
   { title: "Zhipu AI", subtitle: "FDE · 微调 / 共创", icon: BracketsCurly, href: "https://bigmodel.cn/" },
   { title: "SAP", subtitle: "Full-stack · 4 端", icon: Phone, href: "https://play.google.com/store/apps/details?id=b1.sales.mobile.android&hl=en_GB" },
   { title: "MTEB", subtitle: "2yr+ Contributor", icon: ChartLineUp, href: "https://github.com/embeddings-benchmark/mteb/" },

@@ -16,7 +16,7 @@ export const profile = {
 export const about = {
   bio: [
     "我是 Smile Hu，PIN AI 的 Chief AI Engineer & Chief Researcher。此前在智谱 AI 做 FDE——微调模型、和客户共创；更早在 SAP 做全栈开发（Web / Backend / iOS / Android）。",
-    "定位：高级 AI 工程师 × 全栈工程师 × AI 产品经理。一直在创业公司，掌握把产品从 0 做到 1 的全部技能和经验。",
+    "定位：高级 AI 工程师 × 全栈工程师 × AI 产品经理。一直在创业公司，掌握把产品从 0 做到 1 的全部技能和经验——软件到硬件：在 PIN AI 期间还负责 personal AI / ambient AI 硬件设备的研发。",
     "长期关注 personal AI / ambient AI / agent harness。这个网站是我的积累平台：文章、skill、产品先在这里沉淀，再分发到各个平台。",
   ],
   specs: [
@@ -24,7 +24,7 @@ export const about = {
     { label: "PAST", value: "智谱 AI（FDE）· SAP" },
     { label: "EDU", value: "同济大学 · CS" },
     { label: "FOCUS", value: "Personal AI / Ambient AI / Agent" },
-    { label: "OUTPUT", value: "产品 / 文章 / SKILL" },
+    { label: "OUTPUT", value: "产品 / 硬件 / 文章 / SKILL" },
     { label: "PLAY", value: "CS · 王者荣耀" },
   ],
 };
@@ -109,8 +109,8 @@ export const projects = [
     tag: "PERSONAL AI · NOW",
     title: "PIN AI",
     role: "Chief AI Engineer & Chief Researcher",
-    body: "Personal AI 创业公司——我负责 AI 工程与研究的端到端，从模型接入、Agent 系统到产品面。",
-    stack: ["Agents", "LLM", "Full-stack"],
+    body: "Personal AI 创业公司——我负责 AI 工程与研究的端到端，从模型接入、Agent 系统到产品面；同时主导 personal AI / ambient AI 硬件设备的研发。",
+    stack: ["Agents", "LLM", "Hardware", "Full-stack"],
     status: "SHIPPED",
     href: "https://www.pinai.com/",
     links: [
