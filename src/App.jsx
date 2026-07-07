@@ -201,7 +201,7 @@ function TrainingPanel() {
     <section className="training-panel" aria-label="Smile Hu as a large model">
       <img
         className="training-flow-background"
-        src="/assets/diagram/model-flow-background-portrait.png"
+        src="/assets/diagram/model-flow-background-portrait.webp"
         alt=""
         aria-hidden="true"
       />
@@ -231,7 +231,7 @@ function TrainingPanel() {
           <h2>Smile Hu</h2>
           <p>A-level Product Model</p>
         </div>
-        <img className="model-photo" src="/assets/smile-hu-portrait.jpg" alt="Smile Hu portrait" />
+        <img className="model-photo" src="/assets/smile-hu-portrait.webp" alt="Smile Hu portrait" />
       </div>
 
       <div className="finetuning panel-step">
