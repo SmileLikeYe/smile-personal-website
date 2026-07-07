@@ -27,51 +27,43 @@ export const about = {
     { label: "FORMAT", value: "文章 / SKILL / 产品" },
     { label: "OPEN TO", value: "AI 产品与工程岗位" },
   ],
-  // 写 → 建 → 淀 三步循环
-  flow: [
-    { zh: "写", en: "WRITE" },
-    { zh: "建", en: "BUILD" },
-    { zh: "淀", en: "DISTILL" },
-  ],
 };
 
-// 全平台信号台：LIVE = 已在运营，SOON = 即将开通
-// [MOCK] count 数字请核实后替换（"—" 表示暂不展示）
-export const channels = [
+// 内容管线：先沉淀，再分发
+export const loop = ["写 WRITE", "建 BUILD", "淀 DISTILL"];
+
+// Serving Endpoints：内容分发到的各个"服务端点"
+// status "200" = 已上线，"soon" = 筹备中；[MOCK] note 数字请核实
+export const endpoints = [
   {
-    platform: "github",
-    handle: "@SmileLikeYe",
+    path: "github.com/SmileLikeYe",
     href: "https://github.com/SmileLikeYe",
-    count: "20+ PRs",
-    status: "live",
+    status: "200",
+    note: "20+ PRs",
   },
   {
-    platform: "x",
-    handle: "@Yeshujing",
+    path: "x.com/Yeshujing",
     href: "https://x.com/Yeshujing",
-    count: "—",
-    status: "live",
+    status: "200",
+    note: "更新中",
   },
   {
-    platform: "blog",
-    handle: "smileflow.cn",
+    path: "smileflow.cn",
     href: "https://smileflow.cn",
-    count: "6 篇",
-    status: "live",
+    status: "200",
+    note: "6 篇文章",
   },
   {
-    platform: "xiaohongshu",
-    handle: "@Smile",
+    path: "xiaohongshu.com/@Smile",
     href: null,
-    count: "—",
     status: "soon",
+    note: "筹备中",
   },
   {
-    platform: "skills",
-    handle: "skills.sh",
+    path: "skills.sh/@SmileLikeYe",
     href: null,
-    count: "—",
     status: "soon",
+    note: "筹备中",
   },
 ];
 
@@ -137,8 +129,5 @@ export const projects = [
   },
 ];
 
-// Build 区的"排队中"清单
-export const queued = ["skill 市场发布", "小红书内容分发", "个人 AI 记忆系统"];
-
-// Contact 区滚动条内容
-export const marquee = "AI 产品 · Agent · 评测 · build in public · 写 · 建 · 淀 · ";
+// Build 区 "now training" 清单（正在路上的东西）
+export const nowTraining = ["skill 市场发布", "小红书内容分发", "个人 AI 记忆系统"];

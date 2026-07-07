@@ -4,12 +4,10 @@ import {
   ArrowUpRight,
   BracketsCurly,
   ChartLineUp,
-  ChatCircleDots,
   CheckCircle,
   Cube,
   EnvelopeSimple,
   GithubLogo,
-  Globe,
   Link,
   Notepad,
   Phone,
@@ -22,7 +20,7 @@ import {
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, LazyMotion, domAnimation, m } from "motion/react";
 import { featuredPost, posts } from "./content/posts";
-import { about, channels, marquee, profile, projects, queued, skills } from "./content/site";
+import { about, endpoints, loop, nowTraining, profile, projects, skills } from "./content/site";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
@@ -49,13 +47,6 @@ const navItems = [
   { id: "build", label: "BUILD" },
   { id: "contact", label: "CONTACT" },
 ];
-
-const platformIcons = {
-  github: GithubLogo,
-  x: XLogo,
-  blog: Globe,
-  skills: TerminalWindow,
-};
 
 function Nav() {
   const [activeId, setActiveId] = useState(null);
@@ -121,20 +112,6 @@ function Nav() {
         </a>
       </div>
     </header>
-  );
-}
-
-function PageDecor() {
-  return (
-    <>
-      <div className="rail" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-      </div>
-      <span className="cross cross-tr" aria-hidden="true" />
-      <span className="cross cross-bl" aria-hidden="true" />
-    </>
   );
 }
 
@@ -310,47 +287,50 @@ function SectionHead({ index, kicker, title, children }) {
   );
 }
 
-function SignalBoard() {
+function Endpoints() {
   return (
-    <div className="signal" data-reveal="">
-      <div className="signal-head">
-        <h3>全平台信号台</h3>
-        <span className="signal-legend">
-          <b>LIVE</b> / SOON
+    <div className="endpoints" data-reveal="">
+      <div className="ep-head">
+        <h3>Serving Endpoints</h3>
+        <span className="ep-uptime">
+          <i className="ep-dot" aria-hidden="true" />
+          SERVING
         </span>
       </div>
-      <ul className="signal-list">
-        {channels.map(({ platform, handle, href, count, status }) => {
-          const Icon = platformIcons[platform];
+      <div className="ep-pipe" aria-label="内容管线：写、建、淀">
+        {loop.map((step, index) => (
+          <span key={step}>
+            {index > 0 && <b aria-hidden="true">→</b>}
+            {step}
+          </span>
+        ))}
+      </div>
+      <ul className="ep-list">
+        {endpoints.map(({ path, href, status, note }) => {
           const inner = (
             <>
-              <span className={`srow-logo srow-logo-${platform}`}>
-                {Icon ? <Icon size={15} weight="fill" /> : <b>红</b>}
-              </span>
-              <span className="srow-handle">{handle}</span>
-              <span className="srow-count">{count}</span>
-              <span className="srow-bars" aria-hidden="true">
-                <i /><i /><i /><i /><i /><i /><i />
-              </span>
-              <span className="srow-status">
-                <i className="srow-dot" aria-hidden="true" />
-                {status === "live" ? "LIVE" : "SOON"}
+              <span className="ep-method">GET</span>
+              <span className="ep-path">{path}</span>
+              <span className="ep-note">{note}</span>
+              <span className={`ep-status ep-status-${status === "200" ? "ok" : "soon"}`}>
+                {status === "200" ? "200" : "SOON"}
               </span>
             </>
           );
           return (
-            <li className={`srow srow-${status}`} key={platform}>
+            <li className={status === "200" ? "ep-row" : "ep-row ep-row-soon"} key={path}>
               {href ? (
                 <a href={href} target="_blank" rel="noreferrer">
                   {inner}
                 </a>
               ) : (
-                <span className="srow-inner">{inner}</span>
+                <span className="ep-inner">{inner}</span>
               )}
             </li>
           );
         })}
       </ul>
+      <p className="ep-foot">内容在本站沉淀，再分发到各端点。</p>
     </div>
   );
 }
@@ -380,18 +360,7 @@ function AboutSection() {
         </dl>
       </div>
       <div className="about-right">
-        <div className="flow" data-reveal="" aria-label="工作循环：写、建、淀">
-          {about.flow.map(({ zh, en }, index) => (
-            <span className="flow-step" key={en}>
-              {index > 0 && <span className="flow-link" aria-hidden="true" />}
-              <span className="flow-node">
-                <b>{zh}</b>
-                <small>{en}</small>
-              </span>
-            </span>
-          ))}
-        </div>
-        <SignalBoard />
+        <Endpoints />
       </div>
     </section>
   );
@@ -411,8 +380,6 @@ function PostMeta({ post }) {
     <div className="post-meta">
       <span className="post-tag">{post.adapter}</span>
       <i className="dotsep" aria-hidden="true" />
-      <span>{formatDate(post.date)}</span>
-      <i className="dotsep" aria-hidden="true" />
       <span>{post.readingTime}</span>
     </div>
   );
@@ -423,7 +390,6 @@ function WritingSection() {
     const slug = getHashSlug();
     return slug && posts.some((post) => post.slug === slug) ? slug : null;
   });
-  const [showAll, setShowAll] = useState(false);
   const selectedPost = useMemo(
     () => posts.find((post) => post.slug === selectedSlug) || null,
     [selectedSlug],
@@ -471,16 +437,13 @@ function WritingSection() {
     }
   };
 
-  const listPosts = posts.filter((post) => post.slug !== featuredPost.slug);
-  const visiblePosts = showAll ? listPosts : listPosts.slice(0, 3);
-
   return (
     <section className="writing" id="writing" aria-labelledby="writing-title">
-      <SectionHead index="02" kicker="WRITING" title="Writing">
+      <SectionHead index="02" kicker="WRITING" title="Training Log">
         <p className="section-note" data-reveal="">
-          写 — WRITE · 先在这里沉淀
+          写 — WRITE · 训练日志
           <br />
-          再分发到 GitHub / 小红书
+          每篇文章是一次 checkpoint
         </p>
       </SectionHead>
 
@@ -521,47 +484,38 @@ function WritingSection() {
           </m.article>
         ) : (
           <m.div
-            className="writing-grid"
+            className="tlog"
             key="grid"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.24, ease: easeOutStrong }}
           >
-            <button className="feat" type="button" onClick={() => openPost(featuredPost.slug)} data-reveal="">
-              <span className="feat-idx">01</span>
-              <h3 className="feat-title">{featuredPost.title}</h3>
-              <p className="feat-dek">{featuredPost.summary}</p>
-              <PostMeta post={featuredPost} />
-              <span className="feat-read">
-                阅读 <ArrowRight size={14} weight="bold" />
-              </span>
-            </button>
-
-            <div className="writing-list">
-              {visiblePosts.map((post, index) => (
+            {posts.map((post, index) => {
+              const isFeatured = post.slug === featuredPost.slug;
+              return (
                 <button
-                  className="wpost"
+                  className={isFeatured ? "ckpt ckpt-featured" : "ckpt"}
                   type="button"
                   key={post.slug}
                   onClick={() => openPost(post.slug)}
                   data-reveal=""
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  style={{ animationDelay: `${index * 45}ms` }}
                 >
-                  <span className="wpost-idx">{String(index + 2).padStart(2, "0")}</span>
-                  <span className="wpost-body">
-                    <strong className="wpost-title">{post.title}</strong>
+                  <span className="ckpt-id">
+                    ckpt-{String(posts.length - index).padStart(2, "0")}
+                    {isFeatured && <em>★ FEATURED</em>}
+                  </span>
+                  <span className="ckpt-body">
+                    <strong className="ckpt-title">{post.title}</strong>
+                    {isFeatured && <span className="ckpt-dek">{post.summary}</span>}
                     <PostMeta post={post} />
                   </span>
-                  <ArrowUpRight className="wpost-arr" size={16} weight="bold" />
+                  <span className="ckpt-date">{formatDate(post.date)}</span>
+                  <ArrowUpRight className="ckpt-arr" size={16} weight="bold" />
                 </button>
-              ))}
-              {listPosts.length > 3 && (
-                <button className="writing-all" type="button" onClick={() => setShowAll((value) => !value)}>
-                  {showAll ? "收起" : `全部文章 ${posts.length} 篇`} <ArrowRight size={14} weight="bold" />
-                </button>
-              )}
-            </div>
+              );
+            })}
           </m.div>
         )}
       </AnimatePresence>
@@ -572,11 +526,11 @@ function WritingSection() {
 function SkillsSection() {
   return (
     <section className="skills" id="skills" aria-labelledby="skills-title">
-      <SectionHead index="03" kicker="SKILLS" title="Skills">
+      <SectionHead index="03" kicker="SKILLS" title="Adapters">
         <p className="section-note" data-reveal="">
           淀 — DISTILL · 把重复的工作方式
           <br />
-          沉淀成可安装的 skill
+          炼成可安装的 adapter
         </p>
       </SectionHead>
       <div className="skill-list">
@@ -614,13 +568,6 @@ function SkillsSection() {
   );
 }
 
-const gitlog = [
-  { hash: "28722ce", msg: "feat: monad editorial restyle" },
-  { hash: "08fd333", msg: "feat: motion interactions" },
-  { hash: "8b870ab", msg: "feat: ai-design skill" },
-  { hash: "HEAD", msg: "build: in public", head: true },
-];
-
 function BuildSection() {
   return (
     <section className="build" id="build" aria-labelledby="build-title">
@@ -632,66 +579,42 @@ function BuildSection() {
         </p>
       </SectionHead>
 
-      <div className="build-layout">
-        <div className="build-list">
-          {projects.map(({ tag, title, body, impact, stack, href, status }, index) => (
-            <a
-              className="project-row"
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              key={title}
-              data-reveal=""
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <span className="project-idx">{String(index + 1).padStart(2, "0")}</span>
-              <div className="project-main">
-                <h3>
-                  {title}
-                  <span className="project-tag">{tag}</span>
-                </h3>
-                <p>{body}</p>
-                <p className="project-impact">{impact}</p>
-              </div>
-              <div className="project-side">
-                <span className={`status-pill status-${status === "SHIPPED" ? "live" : "soon"}`}>{status}</span>
-                <span className="project-stack">{stack.join(" · ")}</span>
-                <ArrowUpRight className="project-arr" size={16} weight="bold" />
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <aside className="build-aside" data-reveal="" aria-hidden="true">
-          <div className="gitlog">
-            <span className="gitlog-branch">⊖ main ——</span>
-            {gitlog.map(({ hash, msg, head }) => (
-              <span className={`gitlog-row${head ? " gitlog-head" : ""}`} key={hash}>
-                <i />
-                <b>{hash}</b>
-                <em>{msg}</em>
-              </span>
-            ))}
-          </div>
-          <div className="queue">
-            <span className="queue-label">queued {"{"}</span>
-            <ul>
-              {queued.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <span className="queue-label">{"}"}</span>
-          </div>
+      <div className="build-list">
+        {projects.map(({ tag, title, body, impact, stack, href, status }, index) => (
           <a
-            className="build-cta"
-            href={profile.github}
+            className="project-row"
+            href={href}
             target="_blank"
             rel="noreferrer"
-            aria-hidden="false"
+            key={title}
+            data-reveal=""
+            style={{ animationDelay: `${index * 50}ms` }}
           >
-            <GithubLogo size={15} weight="fill" /> 在 GitHub 围观 <ArrowRight size={14} weight="bold" />
+            <span className="project-idx">{String(index + 1).padStart(2, "0")}</span>
+            <div className="project-main">
+              <h3>
+                {title}
+                <span className="project-tag">{tag}</span>
+              </h3>
+              <p>{body}</p>
+              <p className="project-impact">{impact}</p>
+            </div>
+            <div className="project-side">
+              <span className={`status-pill status-${status === "SHIPPED" ? "live" : "soon"}`}>{status}</span>
+              <span className="project-stack">{stack.join(" · ")}</span>
+              <ArrowUpRight className="project-arr" size={16} weight="bold" />
+            </div>
           </a>
-        </aside>
+        ))}
+      </div>
+
+      <div className="build-foot" data-reveal="">
+        <p className="now-training">
+          <span>now training :</span> {nowTraining.join(" · ")}
+        </p>
+        <a className="build-cta" href={profile.github} target="_blank" rel="noreferrer">
+          <GithubLogo size={15} weight="fill" /> 在 GitHub 围观 <ArrowRight size={14} weight="bold" />
+        </a>
       </div>
     </section>
   );
@@ -700,60 +623,51 @@ function BuildSection() {
 function ContactSection() {
   return (
     <section className="contact" id="contact" aria-labelledby="contact-title">
-      <div className="contact-center">
-        <p className="contact-kicker" data-reveal="">
-          <span className="ln" aria-hidden="true" />
-          GET IN TOUCH / 联系
-          <span className="ln" aria-hidden="true" />
-        </p>
-        <h2 className="contact-title" id="contact-title" data-reveal="">
-          Let's talk.
-          <svg className="contact-underline" viewBox="0 0 360 18" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M12 13 Q 180 3, 348 11" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-          </svg>
-        </h2>
-        <p className="contact-sub" data-reveal="">
-          聊聊 AI 产品、Agent，或者一起把想法做出来。
-        </p>
-        <p className="contact-status" data-reveal="">
-          <span className="pulse" aria-hidden="true" />
-          当前开放机会 · Available
-        </p>
-      </div>
-
-      <div className="contact-marquee" aria-hidden="true">
-        <div className="marquee-track">
-          <span>{marquee.repeat(4)}</span>
-          <span>{marquee.repeat(4)}</span>
+      <div className="contact-layout">
+        <div className="contact-left">
+          <p className="section-kicker" data-reveal="">
+            CONTACT — 05
+          </p>
+          <h2 className="section-title" id="contact-title" data-reveal="">
+            Let's talk.
+          </h2>
+          <p className="contact-sub" data-reveal="">
+            聊聊 AI 产品、Agent，
+            <br />
+            或者一起把想法做出来。
+          </p>
+          <p className="contact-status" data-reveal="">
+            <span className="pulse" aria-hidden="true" />
+            当前开放机会 · Available
+          </p>
         </div>
-      </div>
-
-      <div className="contact-bar">
-        <a className="cbar-item" href={`mailto:${profile.email}`}>
-          <span className="cbar-label">EMAIL</span>
-          <span className="cbar-value">{profile.email}</span>
-          <ArrowRight className="cbar-arr" size={15} weight="bold" />
-        </a>
-        <a className="cbar-item" href={profile.x} target="_blank" rel="noreferrer">
-          <span className="cbar-label">
-            <XLogo size={14} weight="bold" /> X
-          </span>
-          <span className="cbar-value">{profile.xHandle}</span>
-          <ArrowRight className="cbar-arr" size={15} weight="bold" />
-        </a>
-        <a className="cbar-item" href={profile.github} target="_blank" rel="noreferrer">
-          <span className="cbar-label">
-            <GithubLogo size={14} weight="fill" /> GITHUB
-          </span>
-          <span className="cbar-value">{profile.githubHandle}</span>
-          <ArrowRight className="cbar-arr" size={15} weight="bold" />
-        </a>
-        <div className="cbar-item cbar-soon">
-          <span className="cbar-label">
-            <ChatCircleDots size={14} weight="fill" /> 微信 / 小红书
-          </span>
-          <span className="cbar-value">内容分发筹备中</span>
-          <span className="cbar-tag">SOON</span>
+        <div className="contact-list" data-reveal="">
+          <a className="crow" href={`mailto:${profile.email}`}>
+            <span className="crow-label">
+              <EnvelopeSimple size={15} weight="regular" /> EMAIL
+            </span>
+            <span className="crow-value">{profile.email}</span>
+            <ArrowRight className="crow-arr" size={15} weight="bold" />
+          </a>
+          <a className="crow" href={profile.x} target="_blank" rel="noreferrer">
+            <span className="crow-label">
+              <XLogo size={14} weight="bold" /> X
+            </span>
+            <span className="crow-value">{profile.xHandle}</span>
+            <ArrowRight className="crow-arr" size={15} weight="bold" />
+          </a>
+          <a className="crow" href={profile.github} target="_blank" rel="noreferrer">
+            <span className="crow-label">
+              <GithubLogo size={14} weight="fill" /> GITHUB
+            </span>
+            <span className="crow-value">{profile.githubHandle}</span>
+            <ArrowRight className="crow-arr" size={15} weight="bold" />
+          </a>
+          <div className="crow crow-soon">
+            <span className="crow-label">微信 / 小红书</span>
+            <span className="crow-value">内容分发筹备中</span>
+            <span className="crow-tag">SOON</span>
+          </div>
         </div>
       </div>
 
@@ -799,7 +713,6 @@ export function App() {
   useRevealOnScroll();
   return (
     <LazyMotion features={domAnimation} strict>
-      <PageDecor />
       <main>
         <Nav />
         <Hero />
