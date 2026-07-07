@@ -51,6 +51,8 @@ function normalizeSkill(path, raw) {
     zh: data.zh || name,
     desc: data.desc || "",
     status: data.status || "draft", // live | draft | soon
+    kind: data.kind || "original", // original | curated
+    author: data.author || null,
     href: data.source || null,
     post: data.post || null,
     content,
@@ -59,4 +61,7 @@ function normalizeSkill(path, raw) {
 
 export const skillDocs = Object.entries(modules)
   .map(([path, raw]) => normalizeSkill(path, raw))
-  .sort((a, b) => a.index.localeCompare(b.index));
+  .sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === "original" ? -1 : 1;
+    return a.index.localeCompare(b.index);
+  });

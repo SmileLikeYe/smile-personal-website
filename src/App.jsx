@@ -169,7 +169,7 @@ const adapters = [
   { title: "Zhipu AI", subtitle: "FDE · 微调 / 共创", icon: BracketsCurly, href: "https://bigmodel.cn/" },
   { title: "SAP", subtitle: "Full-stack · 4 端", icon: Phone, href: "https://play.google.com/store/apps/details?id=b1.sales.mobile.android&hl=en_GB" },
   { title: "MTEB", subtitle: "2yr+ Contributor", icon: ChartLineUp, href: "https://github.com/embeddings-benchmark/mteb/" },
-  { title: "agent-chief", subtitle: "Open Source", icon: TerminalWindow, href: "https://github.com/SmileLikeYe/agent-chief" },
+  { title: "agent-chief", subtitle: "OSS · ★155+", icon: TerminalWindow, href: "https://github.com/SmileLikeYe/agent-chief" },
 ];
 
 const contextItems = ["User needs", "Product problems", "Codebase", "Research", "Feedback"];
@@ -494,8 +494,19 @@ function SectionHead({ index, kicker, title, children }) {
 
 const skillStatusText = { live: "LIVE", draft: "DRAFT", soon: "SOON" };
 
+function SkillPill({ skill }) {
+  if (skill.kind === "curated") {
+    return <span className="status-pill status-curated">收藏</span>;
+  }
+  return (
+    <span className={`status-pill status-${skill.status}`}>
+      {skillStatusText[skill.status] || "SOON"}
+    </span>
+  );
+}
+
 function SkillRow({ skill, delay = 0 }) {
-  const { index, name, zh, desc, status, href, post } = skill;
+  const { index, name, zh, desc, href, post, author, kind } = skill;
   return (
     <article className="skill-row" data-reveal="" style={{ animationDelay: `${delay}ms` }}>
       <span className="skill-idx">{index}</span>
@@ -505,11 +516,12 @@ function SkillRow({ skill, delay = 0 }) {
             {zh}
           </a>
           <code>{name}</code>
+          {kind === "curated" && author && <span className="skill-author">by {author}</span>}
         </h3>
         <p>{desc}</p>
       </div>
       <div className="skill-side">
-        <span className={`status-pill status-${status}`}>{skillStatusText[status] || "SOON"}</span>
+        <SkillPill skill={skill} />
         <span className="skill-links">
           <a href={`#skill/${name}`}>
             阅读 <ArrowRight size={13} weight="bold" />
@@ -541,15 +553,39 @@ function SkillsSection() {
         </p>
       </SectionHead>
       <div className="skill-list">
-        {skillDocs.map((skill, index) => (
+        {skillDocs.slice(0, 5).map((skill, index) => (
           <SkillRow skill={skill} delay={index * 50} key={skill.name} />
         ))}
       </div>
       <a className="more-link" href="#library/skills" data-reveal="">
-        在 Library 查看全部 skills <ArrowRight size={14} weight="bold" />
+        全部 {skillDocs.length} 个 skills（原创 + 收藏）· 可搜索 <ArrowRight size={14} weight="bold" />
       </a>
     </section>
   );
+}
+
+function GhStars({ repo, fallback }) {
+  const [stars, setStars] = useState(fallback);
+
+  useEffect(() => {
+    const cacheKey = `gh-stars-${repo}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      setStars(Number(cached));
+      return;
+    }
+    fetch(`https://api.github.com/repos/${repo}`)
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (data && typeof data.stargazers_count === "number") {
+          setStars(data.stargazers_count);
+          sessionStorage.setItem(cacheKey, String(data.stargazers_count));
+        }
+      })
+      .catch(() => {});
+  }, [repo]);
+
+  return <>{stars}</>;
 }
 
 function BuildSection() {
@@ -564,7 +600,7 @@ function BuildSection() {
       </SectionHead>
 
       <div className="build-list">
-        {projects.map(({ tag, title, role, body, stack, status, href, links }, index) => (
+        {projects.map(({ tag, title, role, body, stack, status, href, links, ghRepo, ghStarsFallback }, index) => (
           <div className="project-row" key={title} data-reveal="" style={{ animationDelay: `${index * 50}ms` }}>
             <span className="project-idx">{String(index + 1).padStart(2, "0")}</span>
             <div className="project-main">
@@ -573,6 +609,11 @@ function BuildSection() {
                   {title}
                   <ArrowUpRight size={15} weight="bold" />
                 </a>
+                {ghRepo && (
+                  <a className="star-chip" href={`https://github.com/${ghRepo}/stargazers`} target="_blank" rel="noreferrer">
+                    ★ <GhStars repo={ghRepo} fallback={ghStarsFallback} />
+                  </a>
+                )}
                 <span className="project-tag">{tag}</span>
               </h3>
               <p className="project-role">{role}</p>
@@ -828,9 +869,8 @@ function SkillPage({ skill }) {
           </button>
           <div className="reader-meta">
             <span>{skill.index}</span>
-            <span className={`status-pill status-${skill.status}`}>
-              {skillStatusText[skill.status] || "SOON"}
-            </span>
+            <SkillPill skill={skill} />
+            {skill.author && <span>by {skill.author}</span>}
             {skill.href && (
               <a className="copy-link" href={skill.href} target="_blank" rel="noreferrer">
                 源码 <ArrowUpRight size={13} weight="bold" />
@@ -885,7 +925,7 @@ function LibraryPage({ initialTab }) {
         .includes(q),
   );
   const filteredSkills = skillDocs.filter(
-    (skill) => !q || [skill.zh, skill.name, skill.desc].join(" ").toLowerCase().includes(q),
+    (skill) => !q || [skill.zh, skill.name, skill.desc, skill.author || ""].join(" ").toLowerCase().includes(q),
   );
 
   const goBack = () => {

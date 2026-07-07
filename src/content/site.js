@@ -92,6 +92,21 @@ export const projects = [
     ],
   },
   {
+    tag: "OPEN SOURCE · ★",
+    title: "agent-chief",
+    role: "Author · 个人开源代表作",
+    body: "围绕 agent harness 的工程实践——把「让 Agent 可靠交付」的方法做成开源工具。我 star 数最高的个人项目。",
+    stack: ["Python", "Agents", "Harness"],
+    status: "ONGOING",
+    href: "https://github.com/SmileLikeYe/agent-chief",
+    ghRepo: "SmileLikeYe/agent-chief",
+    ghStarsFallback: 155,
+    links: [
+      { label: "GitHub", href: "https://github.com/SmileLikeYe/agent-chief" },
+      { label: "Star ⭐", href: "https://github.com/SmileLikeYe/agent-chief/stargazers" },
+    ],
+  },
+  {
     tag: "OPEN SOURCE · 2YR+",
     title: "MTEB",
     role: "Contributor（2 年多）",
@@ -103,16 +118,6 @@ export const projects = [
       { label: "仓库", href: "https://github.com/embeddings-benchmark/mteb/" },
       { label: "我的 PRs", href: "https://github.com/embeddings-benchmark/mteb/pulls?q=author%3ASmileLikeYe" },
     ],
-  },
-  {
-    tag: "OPEN SOURCE",
-    title: "agent-chief",
-    role: "Author",
-    body: "我的个人开源项目——围绕 agent harness 的工程实践。",
-    stack: ["Agents", "Harness"],
-    status: "ONGOING",
-    href: "https://github.com/SmileLikeYe/agent-chief",
-    links: [{ label: "GitHub", href: "https://github.com/SmileLikeYe/agent-chief" }],
   },
   {
     tag: "EX-SAP · FULL-STACK",
