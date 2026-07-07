@@ -8,12 +8,13 @@ import {
   Cube,
   EnvelopeSimple,
   GithubLogo,
+  Globe,
   Link,
+  MagnifyingGlass,
   Notepad,
   Phone,
   Pulse,
   RocketLaunch,
-  Stack,
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
@@ -161,21 +162,38 @@ const pretraining = [
   "AI Foundations",
 ];
 
+// 02 Fine-tuning：真实经历，每一条都可点进去验证
 const adapters = [
-  { title: "PIN AI", subtitle: "Assistant", icon: Cube },
-  { title: "MTEB", subtitle: "Eval", icon: ChartLineUp },
-  { title: "Mobile AI", subtitle: "Runtime", icon: Phone },
-  { title: "Codex Skills", subtitle: "Loops", icon: TerminalWindow },
-  { title: "Agent Workflows", subtitle: "Workflow", icon: BracketsCurly },
+  { title: "PIN AI", subtitle: "Chief AI Engineer", icon: Cube, href: "https://www.pinai.com/" },
+  { title: "Zhipu AI", subtitle: "FDE · 微调 / 共创", icon: BracketsCurly, href: "https://bigmodel.cn/" },
+  { title: "SAP", subtitle: "Full-stack · 4 端", icon: Phone, href: "https://play.google.com/store/apps/details?id=b1.sales.mobile.android&hl=en_GB" },
+  { title: "MTEB", subtitle: "2yr+ Contributor", icon: ChartLineUp, href: "https://github.com/embeddings-benchmark/mteb/" },
+  { title: "agent-chief", subtitle: "Open Source", icon: TerminalWindow, href: "https://github.com/SmileLikeYe/agent-chief" },
 ];
 
 const contextItems = ["User needs", "Product problems", "Codebase", "Research", "Feedback"];
 
+// 04 Outputs：真实数字与产出
 const outputs = [
-  { title: "Products", subtitle: "PIN AI, PINLOB", icon: RocketLaunch, href: "#build" },
-  { title: "Open Source", subtitle: "PRs & contributions", icon: GithubLogo, href: "#build" },
-  { title: "Writing", subtitle: "Markdown posts", icon: Notepad, href: "#writing" },
-  { title: "Systems", subtitle: "Skills & tools", icon: Stack, href: "#skills" },
+  {
+    title: "3M+ Users",
+    subtitle: "PIN AI · consumer",
+    icon: RocketLaunch,
+    href: "https://x.com/pinai_io/status/1950915602983346431",
+  },
+  {
+    title: "$10M Raised",
+    subtitle: "PIN AI · funding",
+    icon: ChartLineUp,
+    href: "https://x.com/pinai_io/status/1833176031714541651",
+  },
+  {
+    title: "Open Source",
+    subtitle: "SDK · MTEB · chief",
+    icon: GithubLogo,
+    href: "https://github.com/SmileLikeYe",
+  },
+  { title: "Writing & Skills", subtitle: "文章 · adapter", icon: Notepad, href: "#writing" },
 ];
 
 function TrainingPanel() {
@@ -221,15 +239,15 @@ function TrainingPanel() {
         <h2>Fine-tuning</h2>
         <p>Adapters</p>
         <div className="adapter-list">
-          {adapters.map(({ title, subtitle, icon: Icon }) => (
-            <button className="adapter" type="button" key={title}>
+          {adapters.map(({ title, subtitle, icon: Icon, href }) => (
+            <a className="adapter" href={href} target="_blank" rel="noreferrer" key={title}>
               <Icon size={23} weight="duotone" />
               <span>
                 <strong>{title}</strong>
                 <small>{subtitle}</small>
               </span>
               <CheckCircle size={18} weight="fill" />
-            </button>
+            </a>
           ))}
         </div>
       </div>
@@ -250,15 +268,23 @@ function TrainingPanel() {
         <h2>Outputs</h2>
         <p>Shipped value</p>
         <div className="output-list">
-          {outputs.map(({ title, subtitle, icon: Icon, href }) => (
-            <a href={href} key={title}>
-              <Icon size={22} weight="duotone" />
-              <span>
-                <strong>{title}</strong>
-                <small>{subtitle}</small>
-              </span>
-            </a>
-          ))}
+          {outputs.map(({ title, subtitle, icon: Icon, href }) => {
+            const external = href.startsWith("http");
+            return (
+              <a
+                href={href}
+                key={title}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noreferrer" : undefined}
+              >
+                <Icon size={22} weight="duotone" />
+                <span>
+                  <strong>{title}</strong>
+                  <small>{subtitle}</small>
+                </span>
+              </a>
+            );
+          })}
         </div>
       </div>
 
@@ -272,21 +298,12 @@ function TrainingPanel() {
   );
 }
 
-function SectionHead({ index, kicker, title, children }) {
-  return (
-    <header className="section-head">
-      <p className="section-kicker" data-reveal="">
-        {kicker} — {index}
-      </p>
-      <div className="section-head-row">
-        <h2 className="section-title" data-reveal="">
-          {title}
-        </h2>
-        {children}
-      </div>
-    </header>
-  );
-}
+const platformIcons = {
+  github: GithubLogo,
+  x: XLogo,
+  blog: Globe,
+  skills: TerminalWindow,
+};
 
 function Endpoints() {
   return (
@@ -307,10 +324,13 @@ function Endpoints() {
         ))}
       </div>
       <ul className="ep-list">
-        {endpoints.map(({ path, href, status, note }) => {
+        {endpoints.map(({ platform, path, href, status, note }) => {
+          const Icon = platformIcons[platform];
           const inner = (
             <>
-              <span className="ep-method">GET</span>
+              <span className={`ep-logo ep-logo-${platform}`}>
+                {Icon ? <Icon size={14} weight="fill" /> : <b>红</b>}
+              </span>
               <span className="ep-path">{path}</span>
               <span className="ep-note">{note}</span>
               <span className={`ep-status ep-status-${status === "200" ? "ok" : "soon"}`}>
@@ -367,9 +387,19 @@ function AboutSection() {
   );
 }
 
-function getHashSlug() {
-  const match = window.location.hash.match(/^#post\/(.+)$/);
-  return match ? decodeURIComponent(match[1]) : null;
+function getHashRoute() {
+  const hash = window.location.hash;
+  const postMatch = hash.match(/^#post\/(.+)$/);
+  if (postMatch) {
+    const slug = decodeURIComponent(postMatch[1]);
+    const post = posts.find((item) => item.slug === slug);
+    if (post) return { type: "post", post };
+  }
+  const libraryMatch = hash.match(/^#library(?:\/(\w+))?$/);
+  if (libraryMatch) {
+    return { type: "library", tab: libraryMatch[1] === "skills" ? "skills" : "posts" };
+  }
+  return null;
 }
 
 function formatDate(date) {
@@ -386,7 +416,32 @@ function PostMeta({ post }) {
   );
 }
 
+function CkptRow({ post, ckptNumber, delay = 0 }) {
+  const isFeatured = post.slug === featuredPost.slug;
+  return (
+    <a
+      className={isFeatured ? "ckpt ckpt-featured" : "ckpt"}
+      href={`#post/${post.slug}`}
+      data-reveal=""
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <span className="ckpt-id">
+        ckpt-{String(ckptNumber).padStart(2, "0")}
+        {isFeatured && <em>★ FEATURED</em>}
+      </span>
+      <span className="ckpt-body">
+        <strong className="ckpt-title">{post.title}</strong>
+        {isFeatured && <span className="ckpt-dek">{post.summary}</span>}
+        <PostMeta post={post} />
+      </span>
+      <span className="ckpt-date">{formatDate(post.date)}</span>
+      <ArrowUpRight className="ckpt-arr" size={16} weight="bold" />
+    </a>
+  );
+}
+
 function WritingSection() {
+  const recent = posts.slice(0, 4);
   return (
     <section className="writing" id="writing" aria-labelledby="writing-title">
       <SectionHead index="02" kicker="WRITING" title="Training Log">
@@ -398,102 +453,68 @@ function WritingSection() {
       </SectionHead>
 
       <div className="tlog">
-        {posts.map((post, index) => {
-          const isFeatured = post.slug === featuredPost.slug;
-          return (
-            <a
-              className={isFeatured ? "ckpt ckpt-featured" : "ckpt"}
-              href={`#post/${post.slug}`}
-              key={post.slug}
-              data-reveal=""
-              style={{ animationDelay: `${index * 45}ms` }}
-            >
-              <span className="ckpt-id">
-                ckpt-{String(posts.length - index).padStart(2, "0")}
-                {isFeatured && <em>★ FEATURED</em>}
-              </span>
-              <span className="ckpt-body">
-                <strong className="ckpt-title">{post.title}</strong>
-                {isFeatured && <span className="ckpt-dek">{post.summary}</span>}
-                <PostMeta post={post} />
-              </span>
-              <span className="ckpt-date">{formatDate(post.date)}</span>
-              <ArrowUpRight className="ckpt-arr" size={16} weight="bold" />
-            </a>
-          );
-        })}
+        {recent.map((post, index) => (
+          <CkptRow
+            post={post}
+            ckptNumber={posts.length - posts.indexOf(post)}
+            delay={index * 45}
+            key={post.slug}
+          />
+        ))}
       </div>
+      <a className="more-link" href="#library" data-reveal="">
+        全部文章 {posts.length} 篇 · 可搜索 <ArrowRight size={14} weight="bold" />
+      </a>
     </section>
   );
 }
 
-function PostPage({ post }) {
-  const { scrollYProgress } = useScroll();
-  const [copied, setCopied] = useState(false);
-
-  const copyLink = async () => {
-    const url = `${window.location.origin}${window.location.pathname}#post/${post.slug}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    } catch {
-      window.prompt("Copy this link:", url);
-    }
-  };
-
-  const goBack = () => {
-    window.location.hash = "#writing";
-  };
-
+function SectionHead({ index, kicker, title, children }) {
   return (
-    <m.main
-      className="post-page"
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.26, ease: easeOutStrong }}
-    >
-      <m.div className="read-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
-      <article className="post-article">
-        <div className="reader-bar">
-          <button className="btn-back" type="button" onClick={goBack}>
-            <ArrowLeft size={14} weight="bold" /> 全部文章
-          </button>
-          <div className="reader-meta">
-            <span>{post.status}</span>
-            <span>{formatDate(post.date)}</span>
-            <span>{post.readingTime}</span>
-            <button className="copy-link" type="button" onClick={copyLink}>
-              {copied ? <CheckCircle size={14} weight="fill" /> : <Link size={14} />}
-              {copied ? "Copied" : "Copy link"}
-            </button>
-          </div>
-        </div>
-        <h1 className="reader-title">{post.title}</h1>
-        <p className="reader-summary">{post.summary}</p>
-        <div className="reader-tags">
-          {post.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-        <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
-          <MarkdownBody content={post.content} />
-        </Suspense>
-        <div className="post-page-foot">
-          <button className="btn-back" type="button" onClick={goBack}>
-            <ArrowLeft size={14} weight="bold" /> 返回全部文章
-          </button>
-          <button
-            className="to-top-btn"
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          >
-            回到顶部 ↑
-          </button>
-        </div>
-      </article>
-    </m.main>
+    <header className="section-head">
+      <p className="section-kicker" data-reveal="">
+        {kicker} — {index}
+      </p>
+      <div className="section-head-row">
+        <h2 className="section-title" data-reveal="">
+          {title}
+        </h2>
+        {children}
+      </div>
+    </header>
+  );
+}
+
+function SkillRow({ skill, delay = 0 }) {
+  const { index, name, zh, desc, status, href, post } = skill;
+  return (
+    <article className="skill-row" data-reveal="" style={{ animationDelay: `${delay}ms` }}>
+      <span className="skill-idx">{index}</span>
+      <div className="skill-main">
+        <h3>
+          {zh}
+          <code>{name}</code>
+        </h3>
+        <p>{desc}</p>
+      </div>
+      <div className="skill-side">
+        <span className={`status-pill status-${status}`}>
+          {status === "live" ? "LIVE" : "SOON"}
+        </span>
+        <span className="skill-links">
+          {href && (
+            <a href={href} target="_blank" rel="noreferrer">
+              源码 <ArrowUpRight size={13} weight="bold" />
+            </a>
+          )}
+          {post && (
+            <a href={`#post/${post}`}>
+              文章 <ArrowRight size={13} weight="bold" />
+            </a>
+          )}
+        </span>
+      </div>
+    </article>
   );
 }
 
@@ -508,36 +529,13 @@ function SkillsSection() {
         </p>
       </SectionHead>
       <div className="skill-list">
-        {skills.map(({ index, name, zh, desc, status, href, post }, i) => (
-          <article className="skill-row" key={name} data-reveal="" style={{ animationDelay: `${i * 50}ms` }}>
-            <span className="skill-idx">{index}</span>
-            <div className="skill-main">
-              <h3>
-                {zh}
-                <code>{name}</code>
-              </h3>
-              <p>{desc}</p>
-            </div>
-            <div className="skill-side">
-              <span className={`status-pill status-${status}`}>
-                {status === "live" ? "LIVE" : "SOON"}
-              </span>
-              <span className="skill-links">
-                {href && (
-                  <a href={href} target="_blank" rel="noreferrer">
-                    源码 <ArrowUpRight size={13} weight="bold" />
-                  </a>
-                )}
-                {post && (
-                  <a href={`#post/${post}`}>
-                    文章 <ArrowRight size={13} weight="bold" />
-                  </a>
-                )}
-              </span>
-            </div>
-          </article>
+        {skills.map((skill, index) => (
+          <SkillRow skill={skill} delay={index * 50} key={skill.name} />
         ))}
       </div>
+      <a className="more-link" href="#library/skills" data-reveal="">
+        在 Library 查看全部 skills <ArrowRight size={14} weight="bold" />
+      </a>
     </section>
   );
 }
@@ -547,38 +545,39 @@ function BuildSection() {
     <section className="build" id="build" aria-labelledby="build-title">
       <SectionHead index="04" kicker="BUILD" title="Build">
         <p className="section-note" data-reveal="">
-          建 — BUILD · 公开建造中
+          建 — BUILD · 每一条战绩
           <br />
-          本站源码也在 GitHub
+          都有可验证的链接
         </p>
       </SectionHead>
 
       <div className="build-list">
-        {projects.map(({ tag, title, body, impact, stack, href, status }, index) => (
-          <a
-            className="project-row"
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            key={title}
-            data-reveal=""
-            style={{ animationDelay: `${index * 50}ms` }}
-          >
+        {projects.map(({ tag, title, role, body, stack, status, href, links }, index) => (
+          <div className="project-row" key={title} data-reveal="" style={{ animationDelay: `${index * 50}ms` }}>
             <span className="project-idx">{String(index + 1).padStart(2, "0")}</span>
             <div className="project-main">
               <h3>
-                {title}
+                <a className="project-title-link" href={href} target="_blank" rel="noreferrer">
+                  {title}
+                  <ArrowUpRight size={15} weight="bold" />
+                </a>
                 <span className="project-tag">{tag}</span>
               </h3>
+              <p className="project-role">{role}</p>
               <p>{body}</p>
-              <p className="project-impact">{impact}</p>
+              <span className="project-links">
+                {links.map(({ label, href: linkHref }) => (
+                  <a href={linkHref} target="_blank" rel="noreferrer" key={label}>
+                    {label} <ArrowUpRight size={12} weight="bold" />
+                  </a>
+                ))}
+              </span>
             </div>
             <div className="project-side">
               <span className={`status-pill status-${status === "SHIPPED" ? "live" : "soon"}`}>{status}</span>
               <span className="project-stack">{stack.join(" · ")}</span>
-              <ArrowUpRight className="project-arr" size={16} weight="bold" />
             </div>
-          </a>
+          </div>
         ))}
       </div>
 
@@ -606,7 +605,7 @@ function ContactSection() {
             Let's talk.
           </h2>
           <p className="contact-sub" data-reveal="">
-            聊聊 AI 产品、Agent，
+            聊聊 personal AI、agent harness，
             <br />
             或者一起把想法做出来。
           </p>
@@ -704,6 +703,178 @@ function TypeLine() {
   );
 }
 
+function PostPage({ post }) {
+  const { scrollYProgress } = useScroll();
+  const [copied, setCopied] = useState(false);
+
+  const copyLink = async () => {
+    const url = `${window.location.origin}${window.location.pathname}#post/${post.slug}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      window.prompt("Copy this link:", url);
+    }
+  };
+
+  const goBack = () => {
+    window.location.hash = "#writing";
+  };
+
+  return (
+    <m.main
+      className="post-page"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.26, ease: easeOutStrong }}
+    >
+      <m.div className="read-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
+      <article className="post-article">
+        <div className="reader-bar">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 全部文章
+          </button>
+          <div className="reader-meta">
+            <span>{post.status}</span>
+            <span>{formatDate(post.date)}</span>
+            <span>{post.readingTime}</span>
+            <button className="copy-link" type="button" onClick={copyLink}>
+              {copied ? <CheckCircle size={14} weight="fill" /> : <Link size={14} />}
+              {copied ? "Copied" : "Copy link"}
+            </button>
+          </div>
+        </div>
+        <h1 className="reader-title">{post.title}</h1>
+        <p className="reader-summary">{post.summary}</p>
+        <div className="reader-tags">
+          {post.tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+        <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
+          <MarkdownBody content={post.content} />
+        </Suspense>
+        <div className="post-page-foot">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 返回全部文章
+          </button>
+          <button
+            className="to-top-btn"
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            回到顶部 ↑
+          </button>
+        </div>
+      </article>
+    </m.main>
+  );
+}
+
+function LibraryPage({ initialTab }) {
+  const [tab, setTab] = useState(initialTab);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
+
+  const q = query.trim().toLowerCase();
+  const filteredPosts = posts.filter(
+    (post) =>
+      !q ||
+      [post.title, post.summary, post.adapter, ...(post.tags || [])]
+        .join(" ")
+        .toLowerCase()
+        .includes(q),
+  );
+  const filteredSkills = skills.filter(
+    (skill) => !q || [skill.zh, skill.name, skill.desc].join(" ").toLowerCase().includes(q),
+  );
+
+  const goBack = () => {
+    window.location.hash = tab === "skills" ? "#skills" : "#writing";
+  };
+
+  return (
+    <m.main
+      className="library-page"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.26, ease: easeOutStrong }}
+    >
+      <div className="library-inner">
+        <div className="reader-bar">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 返回
+          </button>
+          <span className="library-count">
+            {tab === "posts" ? `${filteredPosts.length} / ${posts.length} 篇` : `${filteredSkills.length} / ${skills.length} 个`}
+          </span>
+        </div>
+
+        <p className="section-kicker">LIBRARY · 全部沉淀</p>
+        <h1 className="section-title library-title">Library</h1>
+
+        <div className="library-controls">
+          <div className="library-tabs" role="tablist">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === "posts"}
+              className={tab === "posts" ? "active" : ""}
+              onClick={() => setTab("posts")}
+            >
+              文章 {posts.length}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === "skills"}
+              className={tab === "skills" ? "active" : ""}
+              onClick={() => setTab("skills")}
+            >
+              Skills {skills.length}
+            </button>
+          </div>
+          <label className="library-search">
+            <MagnifyingGlass size={15} />
+            <input
+              type="search"
+              value={query}
+              placeholder={tab === "posts" ? "搜索标题 / 摘要 / 标签…" : "搜索 skill…"}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </label>
+        </div>
+
+        {tab === "posts" ? (
+          <div className="tlog library-list">
+            {filteredPosts.map((post) => (
+              <CkptRow post={post} ckptNumber={posts.length - posts.indexOf(post)} key={post.slug} />
+            ))}
+            {filteredPosts.length === 0 && (
+              <p className="library-empty">没有匹配「{query}」的文章 —— 换个关键词试试。</p>
+            )}
+          </div>
+        ) : (
+          <div className="skill-list library-list">
+            {filteredSkills.map((skill) => (
+              <SkillRow skill={skill} key={skill.name} />
+            ))}
+            {filteredSkills.length === 0 && (
+              <p className="library-empty">没有匹配「{query}」的 skill —— 换个关键词试试。</p>
+            )}
+          </div>
+        )}
+      </div>
+    </m.main>
+  );
+}
+
 function useRevealOnScroll() {
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -732,49 +903,47 @@ function useRevealOnScroll() {
   }, []);
 }
 
-function useHashPost() {
-  const [slug, setSlug] = useState(() => {
-    const initial = getHashSlug();
-    return initial && posts.some((post) => post.slug === initial) ? initial : null;
-  });
+function useHashRoute() {
+  const [route, setRoute] = useState(getHashRoute);
 
   useEffect(() => {
-    const onHashChange = () => {
-      const next = getHashSlug();
-      setSlug(next && posts.some((post) => post.slug === next) ? next : null);
-    };
+    const onHashChange = () => setRoute(getHashRoute());
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  return slug ? posts.find((post) => post.slug === slug) : null;
+  return route;
 }
 
 export function App() {
   useRevealOnScroll();
-  const post = useHashPost();
+  const route = useHashRoute();
+  const routeKey = route ? (route.type === "post" ? route.post.slug : "library") : "home";
 
   useEffect(() => {
-    if (post) {
+    if (route) {
       window.scrollTo({ top: 0, behavior: "instant" });
     }
-  }, [post]);
+  }, [routeKey]);
 
-  // 从文章页返回首页时，等首页挂载完再定位到 Writing 区
+  // 从二级页返回首页时，等首页挂载完再定位到对应区块
   const onExitComplete = () => {
-    if (!getHashSlug()) {
+    if (!getHashRoute()) {
+      const target = window.location.hash.replace("#", "") || "writing";
       requestAnimationFrame(() => {
-        document.getElementById("writing")?.scrollIntoView({ behavior: "instant" });
+        document.getElementById(target)?.scrollIntoView({ behavior: "instant" });
       });
     }
   };
 
   return (
     <LazyMotion features={domAnimation} strict>
-      <Nav resetKey={post ? post.slug : "home"} />
+      <Nav resetKey={routeKey} />
       <AnimatePresence mode="wait" initial={false} onExitComplete={onExitComplete}>
-        {post ? (
-          <PostPage post={post} key={post.slug} />
+        {route?.type === "post" ? (
+          <PostPage post={route.post} key={route.post.slug} />
+        ) : route?.type === "library" ? (
+          <LibraryPage initialTab={route.tab} key="library" />
         ) : (
           <m.main
             key="home"
