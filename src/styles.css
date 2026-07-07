@@ -1117,6 +1117,10 @@ section {
   background: var(--blue);
 }
 
+.ep-logo-rss {
+  background: var(--amber);
+}
+
 .ep-logo-xiaohongshu {
   background: var(--red-xhs);
 }
@@ -2350,11 +2354,43 @@ a.crow:hover .crow-label {
 
 @media (max-width: 760px) {
   :root {
-    --header-height: 58px;
+    --header-height: 96px;
+  }
+
+  .site-header {
+    flex-wrap: wrap;
+    row-gap: 0;
+    height: auto;
+    min-height: var(--header-height);
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .brand {
+    font-size: 20px;
   }
 
   .nav-links {
+    order: 3;
+    width: 100%;
+    gap: 10px;
+    padding-bottom: 2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
     display: none;
+  }
+
+  .nav-item {
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+
+  .connect-button {
+    padding: 8px 14px;
   }
 
   .hero-wordmark {

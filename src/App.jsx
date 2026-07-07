@@ -15,6 +15,7 @@ import {
   Phone,
   Pulse,
   RocketLaunch,
+  Rss,
   TerminalWindow,
   XLogo,
 } from "@phosphor-icons/react";
@@ -303,6 +304,7 @@ const platformIcons = {
   github: GithubLogo,
   x: XLogo,
   blog: Globe,
+  rss: Rss,
   skills: TerminalWindow,
 };
 
@@ -1100,6 +1102,15 @@ export function App() {
     if (route) {
       window.scrollTo({ top: 0, behavior: "instant" });
     }
+    const base = "Smile Hu — AI product engineer × build in public";
+    document.title =
+      route?.type === "post"
+        ? `${route.post.title} — Smile Hu`
+        : route?.type === "skill"
+          ? `${route.skill.zh}（skill）— Smile Hu`
+          : route?.type === "library"
+            ? "Library — Smile Hu"
+            : base;
   }, [routeKey]);
 
   // 从二级页返回首页时，等首页挂载完再定位到对应区块

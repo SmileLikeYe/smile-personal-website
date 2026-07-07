@@ -57,6 +57,13 @@ export const endpoints = [
     note: "持续更新",
   },
   {
+    platform: "rss",
+    path: "smileflow.cn/rss.xml",
+    href: "https://smileflow.cn/rss.xml",
+    status: "200",
+    note: "订阅",
+  },
+  {
     platform: "xiaohongshu",
     path: "xiaohongshu.com/@Smile",
     href: null,

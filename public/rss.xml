@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Smile Hu — Training Log</title>
+    <link>https://smileflow.cn</link>
+    <description>把 AI 能力打磨成能交付的产品，把过程沉淀成公开的文章与 skill。</description>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 07 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>你的心跳 Agent 正在训练你忽略它:我做了一个会「学」的注意力层</title>
+      <link>https://smileflow.cn/#post/attention-layer-for-agents</link>
+      <guid isPermaLink="false">attention-layer-for-agents</guid>
+      <pubDate>Tue, 07 Jul 2026 00:00:00 GMT</pubDate>
+      <description>十个各自「有帮助」的 Agent,合起来是对一个人前额叶的 DDoS。我把一个本地优先的注意力层做成了三件能拿出来讲的工程:先做便宜的判断、给每次昂贵的判断算钱、以及——用一个可证伪的评测证明它真的会学。</description>
+    </item>
+    <item>
+      <title>怎样用 AI 做设计：我的六步工作流</title>
+      <link>https://smileflow.cn/#post/ai-design-workflow</link>
+      <guid isPermaLink="false">ai-design-workflow</guid>
+      <pubDate>Sun, 21 Jun 2026 00:00:00 GMT</pubDate>
+      <description>设计仍是应用最大的护城河。微调设计比写代码难，描述风格更难——所以别用形容词传递审美，用 design.md、截图和结构清单。</description>
+    </item>
+    <item>
+      <title>百万级用户的 personal AI：上线之后我才学会的五件事</title>
+      <link>https://smileflow.cn/#post/personal-ai-at-scale</link>
+      <guid isPermaLink="false">personal-ai-at-scale</guid>
+      <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Demo 和产品之间隔着的不是功能，是分布：用户的分布、失败的分布、成本的分布。规模会把你所有的侥幸都变成事故。</description>
+    </item>
+    <item>
+      <title>Ambient AI 的设备端工程：让手机一直在听，而不吓到任何人</title>
+      <link>https://smileflow.cn/#post/ambient-ai-hardware</link>
+      <guid isPermaLink="false">ambient-ai-hardware</guid>
+      <pubDate>Sun, 17 May 2026 00:00:00 GMT</pubDate>
+      <description>ambient AI 硬件的本质是注意力的前置过滤器：设备端做减法，云端做理解。真正难的不是「听到」，是资源纪律、说话人归属和隐私架构。</description>
+    </item>
+    <item>
+      <title>回答不是交付物：一套 Agent 交付流程是怎么被打出来的</title>
+      <link>https://smileflow.cn/#post/agent-delivery-loop</link>
+      <guid isPermaLink="false">agent-delivery-loop</guid>
+      <pubDate>Sun, 12 Apr 2026 00:00:00 GMT</pubDate>
+      <description>Agent 说「改好了」的那一刻最危险。一次没验证就合并的深夜改动，逼我把整个交付流程重写：步步验证的经济学、上下文预算、四类失败的分类学。</description>
+    </item>
+    <item>
+      <title>Agent 工程的边界感：哪些事不该交给模型</title>
+      <link>https://smileflow.cn/#post/agent-boundaries</link>
+      <guid isPermaLink="false">agent-boundaries</guid>
+      <pubDate>Sun, 08 Mar 2026 00:00:00 GMT</pubDate>
+      <description>三百万用户教会我的一件事：Agent 的上限不在于模型能做多少，而在于你禁止它做什么。</description>
+    </item>
+    <item>
+      <title>在智谱做 FDE：微调不是交付的终点，共创才是</title>
+      <link>https://smileflow.cn/#post/fde-at-zhipu</link>
+      <guid isPermaLink="false">fde-at-zhipu</guid>
+      <pubDate>Sun, 22 Feb 2026 00:00:00 GMT</pubDate>
+      <description>FDE 的价值不在于会调 LoRA，而在于站在客户的生产环境里回答一个问题：这个模型明天早上能不能上线？</description>
+    </item>
+    <item>
+      <title>做了一年个人 AI，我重新理解了「记忆」</title>
+      <link>https://smileflow.cn/#post/personal-ai-memory</link>
+      <guid isPermaLink="false">personal-ai-memory</guid>
+      <pubDate>Sun, 18 Jan 2026 00:00:00 GMT</pubDate>
+      <description>记忆不是模型问题，是数据建模加检索问题。向量库存得越多，AI 越蠢——真正的工程在于分层、时效和忘却。</description>
+    </item>
+    <item>
+      <title>把大模型塞进手机：端侧推理的三个工程取舍</title>
+      <link>https://smileflow.cn/#post/ondevice-tradeoffs</link>
+      <guid isPermaLink="false">ondevice-tradeoffs</guid>
+      <pubDate>Sun, 14 Dec 2025 00:00:00 GMT</pubDate>
+      <description>端侧 AI 最贵的一课：模型质量是排在延迟、内存、电量之后的第四优先级。这是我在 iPhone 上跑本地模型一年攒下的预算表、量化决策和线上翻车记录。</description>
+    </item>
+    <item>
+      <title>用 Eval 驱动产品迭代：从 MTEB 学到的方法论</title>
+      <link>https://smileflow.cn/#post/eval-driven-iteration</link>
+      <guid isPermaLink="false">eval-driven-iteration</guid>
+      <pubDate>Sun, 16 Nov 2025 00:00:00 GMT</pubDate>
+      <description>在 MTEB 待了两年多，我学到的第一件事是：benchmark 默认是坏的。这个假设搬到产品 eval 上，反而是整套方法论的起点。</description>
+    </item>
+  </channel>
+</rss>
