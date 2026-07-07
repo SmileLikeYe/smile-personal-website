@@ -7,7 +7,7 @@ adapter: "PIN AI"
 summary: "Demo 和产品之间隔着的不是功能，是分布：用户的分布、失败的分布、成本的分布。规模会把你所有的侥幸都变成事故。"
 tags: ["Personal AI", "Agent", "工程", "PIN AI"]
 readingTime: "10 min"
-status: "Draft"
+status: "Published"
 ---
 
 在 PIN AI 负责 AI 工程这几年，最大的感受是：**demo 和产品之间隔着的不是功能，是分布**。demo 面对的是你设计好的输入；产品面对的是几百万真实用户的分布——用户的分布、失败的分布、成本的分布。规模会把你所有的侥幸都变成事故。

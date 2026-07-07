@@ -3,7 +3,8 @@ index: "S3"
 name: "eval-driven"
 zh: "评测驱动迭代"
 desc: "没有评测的迭代是抛硬币。样本集策展、三层评测体系、迭代日志模板、防 Goodhart——从 MTEB 两年多贡献与产品评测落地中提炼。"
-status: "draft"
+status: "live"
+source: "https://github.com/SmileLikeYe/smile-personal-website/tree/main/.claude/skills/eval-driven"
 post: "eval-driven-iteration"
 ---
 
@@ -69,4 +70,3 @@ LLM judge 用的时候要记住：judge 本身也是被测系统。固定 judge 
 
 原型探索期不需要——那时你要的是快速试错，不是稳定度量。评测在"知道要什么、要把它做稳"的阶段才开始付费。判断标准：当你第二次说出"这次感觉比上次好"时，就该建评测了。
 
-> 状态：DRAFT —— 正在把样本集模板、迭代日志模板和 LLM judge 校准脚本打包成可安装 skill。

@@ -3,7 +3,8 @@ index: "S2"
 name: "agent-delivery"
 zh: "Agent 交付循环"
 desc: "让 Agent 交付可用的产品面，而不是一段回答：任务简报 → 工具核实 → 步步验证 → 失败分类 → 交付报告，全流程可执行模板。"
-status: "draft"
+status: "live"
+source: "https://github.com/SmileLikeYe/smile-personal-website/tree/main/.claude/skills/agent-delivery"
 post: "agent-delivery-loop"
 ---
 
@@ -81,4 +82,3 @@ post: "agent-delivery-loop"
 - 在最后一刻做一次"大验证" —— 攒批验证 = 攒批返工
 - 上下文里塞满原始日志 —— 侦察外包，结论进主线
 
-> 状态：DRAFT —— 模板已在本站与工作项目中跑通多轮，正在打包成可安装 skill。

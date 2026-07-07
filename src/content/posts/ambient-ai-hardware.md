@@ -7,7 +7,7 @@ adapter: "Ambient AI"
 summary: "ambient AI 硬件的本质是注意力的前置过滤器：设备端做减法，云端做理解。真正难的不是「听到」，是资源纪律、说话人归属和隐私架构。"
 tags: ["Ambient AI", "硬件", "端侧", "语音", "PIN AI"]
 readingTime: "11 min"
-status: "Draft"
+status: "Published"
 ---
 
 在 PIN AI 做 personal AI 的过程中，我们很快撞到一个天花板：**AI 对你的了解，上限取决于它拿到的 context，而 context 发生在物理世界里**。你一天说的话、开的会、走的路、心率的起伏——这些都不在聊天框里。所以我们开始做 ambient AI 的硬件方向：让设备持续地、低调地采集环境信号，把物理世界变成模型的输入。

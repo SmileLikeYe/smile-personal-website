@@ -7,7 +7,7 @@ adapter: "FDE"
 summary: "FDE 的价值不在于会调 LoRA，而在于站在客户的生产环境里回答一个问题：这个模型明天早上能不能上线？"
 tags: ["FDE", "微调", "大模型落地", "智谱"]
 readingTime: "9 min"
-status: "Draft"
+status: "Published"
 ---
 
 在智谱做 FDE（Forward Deployed Engineer）的那段时间，教会我一件在实验室里永远学不到的事：**模型能力和客户价值之间，隔着一整条工程与组织的鸿沟**。FDE 的工作就是站在鸿沟中间，两边都要够得着。
