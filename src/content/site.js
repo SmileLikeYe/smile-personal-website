@@ -23,7 +23,7 @@ export const about = {
     { label: "NOW", value: "Chief AI Engineer @ PIN AI" },
     { label: "PAST", value: "智谱 AI（FDE）· SAP" },
     { label: "EDU", value: "同济大学 · CS" },
-    { label: "FOCUS", value: "Personal AI / Ambient AI / Agent" },
+    { label: "FOCUS", value: "Personal AI / Ambient AI / Harness Agent" },
     { label: "OUTPUT", value: "产品 / 硬件 / 文章 / SKILL" },
     { label: "PLAY", value: "CS · 王者荣耀" },
   ],

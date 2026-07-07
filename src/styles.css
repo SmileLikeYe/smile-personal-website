@@ -2252,6 +2252,20 @@ a.crow:hover .crow-label {
   }
 }
 
+/* ───── 板块滚动吸附（桌面）：滑动后干脆地落到下一个板块开头 ───── */
+@media (min-width: 1181px) {
+  html {
+    scroll-snap-type: y mandatory;
+  }
+
+  main > section {
+    scroll-snap-align: start;
+    scroll-margin-top: calc(var(--header-height) - 1px);
+  }
+
+  /* 比视口高的板块内部可自由滚动，接近边界时才吸附 */
+}
+
 /* ───── 响应式 ───── */
 @media (max-width: 1180px) {
   .hero {
