@@ -1,7 +1,7 @@
 ---
 title: "用 Eval 驱动产品迭代：从 MTEB 学到的方法论"
 slug: "eval-driven-iteration"
-date: "2026-06-25"
+date: "2025-11-16"
 type: "Skill"
 adapter: "MTEB"
 summary: "给开源 benchmark 提 PR 教会我的事：没有评测的 AI 产品迭代，本质上是在抛硬币。"

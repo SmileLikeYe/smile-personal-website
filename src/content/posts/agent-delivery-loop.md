@@ -1,7 +1,7 @@
 ---
 title: "我怎么把自己的交付流程「工程化」给 Agent"
 slug: "agent-delivery-loop"
-date: "2026-07-03"
+date: "2026-04-12"
 type: "Skill"
 adapter: "Codex Skills"
 summary: "AI 辅助编程的上限不取决于模型，取决于你给它的工作流：可复用的 playbook、来自模型之外的验证信号、和清晰的人机分工。"

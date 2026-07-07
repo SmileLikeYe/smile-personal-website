@@ -1,7 +1,7 @@
 ---
 title: "怎样用 AI 做设计：我的六步工作流"
 slug: "ai-design-workflow"
-date: "2026-07-05"
+date: "2026-06-21"
 type: "Skill"
 adapter: "Design"
 summary: "设计仍是应用最大的护城河。微调设计比写代码难，描述风格更难——所以别用形容词传递审美，用 design.md、截图和结构清单。"

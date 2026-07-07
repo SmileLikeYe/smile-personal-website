@@ -72,36 +72,7 @@ export const endpoints = [
   },
 ];
 
-// Skills：沉淀下来的可复用方法论（对外输出的第二种形态）
-export const skills = [
-  {
-    index: "S1",
-    name: "ai-design",
-    zh: "怎样用 AI 做设计",
-    desc: "别用形容词传递审美——用 design.md、截图和结构清单。六步：风格 → 结构 → 出图 → 实现 → 动效 → 眼睛。",
-    status: "live",
-    href: "https://github.com/SmileLikeYe/smile-personal-website/tree/main/.claude/skills/ai-design",
-    post: "ai-design-workflow",
-  },
-  {
-    index: "S2",
-    name: "agent-delivery",
-    zh: "Agent 交付循环",
-    desc: "让 Agent 交付可用的产品面，而不是一段回答：计划 → 工具 → 检查 → 修复 → 验证。",
-    status: "soon",
-    href: null,
-    post: "agent-delivery-loop",
-  },
-  {
-    index: "S3",
-    name: "eval-driven",
-    zh: "评测驱动迭代",
-    desc: "没有评测的迭代是抛硬币。先定判据，再动手改，每一轮都有可比较的结论。",
-    status: "soon",
-    href: null,
-    post: "eval-driven-iteration",
-  },
-];
+// Skills 已移到 src/content/skills/*.md（frontmatter + 正文，站内可读）
 
 // Build：真实的产出，每一条都有可验证的链接
 export const projects = [

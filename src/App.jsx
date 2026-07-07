@@ -21,7 +21,8 @@ import {
 import { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence, LazyMotion, domAnimation, m, useScroll } from "motion/react";
 import { featuredPost, posts } from "./content/posts";
-import { about, endpoints, loop, nowTraining, profile, projects, skills, statusLines } from "./content/site";
+import { about, endpoints, loop, nowTraining, profile, projects, statusLines } from "./content/site";
+import { skillDocs } from "./content/skills";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
@@ -395,6 +396,12 @@ function getHashRoute() {
     const post = posts.find((item) => item.slug === slug);
     if (post) return { type: "post", post };
   }
+  const skillMatch = hash.match(/^#skill\/(.+)$/);
+  if (skillMatch) {
+    const name = decodeURIComponent(skillMatch[1]);
+    const skill = skillDocs.find((item) => item.name === name);
+    if (skill) return { type: "skill", skill };
+  }
   const libraryMatch = hash.match(/^#library(?:\/(\w+))?$/);
   if (libraryMatch) {
     return { type: "library", tab: libraryMatch[1] === "skills" ? "skills" : "posts" };
@@ -485,6 +492,8 @@ function SectionHead({ index, kicker, title, children }) {
   );
 }
 
+const skillStatusText = { live: "LIVE", draft: "DRAFT", soon: "SOON" };
+
 function SkillRow({ skill, delay = 0 }) {
   const { index, name, zh, desc, status, href, post } = skill;
   return (
@@ -492,16 +501,19 @@ function SkillRow({ skill, delay = 0 }) {
       <span className="skill-idx">{index}</span>
       <div className="skill-main">
         <h3>
-          {zh}
+          <a className="skill-title-link" href={`#skill/${name}`}>
+            {zh}
+          </a>
           <code>{name}</code>
         </h3>
         <p>{desc}</p>
       </div>
       <div className="skill-side">
-        <span className={`status-pill status-${status}`}>
-          {status === "live" ? "LIVE" : "SOON"}
-        </span>
+        <span className={`status-pill status-${status}`}>{skillStatusText[status] || "SOON"}</span>
         <span className="skill-links">
+          <a href={`#skill/${name}`}>
+            阅读 <ArrowRight size={13} weight="bold" />
+          </a>
           {href && (
             <a href={href} target="_blank" rel="noreferrer">
               源码 <ArrowUpRight size={13} weight="bold" />
@@ -529,7 +541,7 @@ function SkillsSection() {
         </p>
       </SectionHead>
       <div className="skill-list">
-        {skills.map((skill, index) => (
+        {skillDocs.map((skill, index) => (
           <SkillRow skill={skill} delay={index * 50} key={skill.name} />
         ))}
       </div>
@@ -773,6 +785,68 @@ function PostPage({ post }) {
   );
 }
 
+function SkillPage({ skill }) {
+  const { scrollYProgress } = useScroll();
+
+  const goBack = () => {
+    window.location.hash = "#skills";
+  };
+
+  return (
+    <m.main
+      className="post-page"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.26, ease: easeOutStrong }}
+    >
+      <m.div className="read-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
+      <article className="post-article">
+        <div className="reader-bar">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 全部 skills
+          </button>
+          <div className="reader-meta">
+            <span>{skill.index}</span>
+            <span className={`status-pill status-${skill.status}`}>
+              {skillStatusText[skill.status] || "SOON"}
+            </span>
+            {skill.href && (
+              <a className="copy-link" href={skill.href} target="_blank" rel="noreferrer">
+                源码 <ArrowUpRight size={13} weight="bold" />
+              </a>
+            )}
+            {skill.post && (
+              <a className="copy-link" href={`#post/${skill.post}`}>
+                相关文章 <ArrowRight size={13} weight="bold" />
+              </a>
+            )}
+          </div>
+        </div>
+        <h1 className="reader-title">
+          {skill.zh} <code className="skill-page-code">{skill.name}</code>
+        </h1>
+        <p className="reader-summary">{skill.desc}</p>
+        <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
+          <MarkdownBody content={skill.content} />
+        </Suspense>
+        <div className="post-page-foot">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 返回全部 skills
+          </button>
+          <button
+            className="to-top-btn"
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            回到顶部 ↑
+          </button>
+        </div>
+      </article>
+    </m.main>
+  );
+}
+
 function LibraryPage({ initialTab }) {
   const [tab, setTab] = useState(initialTab);
   const [query, setQuery] = useState("");
@@ -790,7 +864,7 @@ function LibraryPage({ initialTab }) {
         .toLowerCase()
         .includes(q),
   );
-  const filteredSkills = skills.filter(
+  const filteredSkills = skillDocs.filter(
     (skill) => !q || [skill.zh, skill.name, skill.desc].join(" ").toLowerCase().includes(q),
   );
 
@@ -812,7 +886,7 @@ function LibraryPage({ initialTab }) {
             <ArrowLeft size={14} weight="bold" /> 返回
           </button>
           <span className="library-count">
-            {tab === "posts" ? `${filteredPosts.length} / ${posts.length} 篇` : `${filteredSkills.length} / ${skills.length} 个`}
+            {tab === "posts" ? `${filteredPosts.length} / ${posts.length} 篇` : `${filteredSkills.length} / ${skillDocs.length} 个`}
           </span>
         </div>
 
@@ -837,7 +911,7 @@ function LibraryPage({ initialTab }) {
               className={tab === "skills" ? "active" : ""}
               onClick={() => setTab("skills")}
             >
-              Skills {skills.length}
+              Skills {skillDocs.length}
             </button>
           </div>
           <label className="library-search">
@@ -918,7 +992,13 @@ function useHashRoute() {
 export function App() {
   useRevealOnScroll();
   const route = useHashRoute();
-  const routeKey = route ? (route.type === "post" ? route.post.slug : "library") : "home";
+  const routeKey = route
+    ? route.type === "post"
+      ? route.post.slug
+      : route.type === "skill"
+        ? `skill-${route.skill.name}`
+        : "library"
+    : "home";
 
   useEffect(() => {
     if (route) {
@@ -942,6 +1022,8 @@ export function App() {
       <AnimatePresence mode="wait" initial={false} onExitComplete={onExitComplete}>
         {route?.type === "post" ? (
           <PostPage post={route.post} key={route.post.slug} />
+        ) : route?.type === "skill" ? (
+          <SkillPage skill={route.skill} key={`skill-${route.skill.name}`} />
         ) : route?.type === "library" ? (
           <LibraryPage initialTab={route.tab} key="library" />
         ) : (

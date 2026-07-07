@@ -1,7 +1,7 @@
 ---
 title: "Agent 工程的边界感：哪些事不该交给模型"
 slug: "agent-boundaries"
-date: "2026-07-04"
+date: "2026-03-08"
 type: "Essay"
 adapter: "Agent Workflows"
 summary: "做 Agent 产品最重要的能力不是让模型做更多事，而是清楚地知道哪些环节必须留在代码里。"

@@ -2011,6 +2011,43 @@ a.crow:hover .crow-arr {
   color: var(--muted);
 }
 
+/* Skill 详情页与状态 */
+.skill-title-link {
+  transition: color 160ms ease;
+}
+
+.skill-title-link:hover {
+  color: var(--blue);
+}
+
+.status-pill.status-draft {
+  color: var(--amber);
+  background: rgba(236, 218, 152, 0.16);
+  border-color: rgba(176, 141, 42, 0.4);
+}
+
+.skill-page-code {
+  padding: 3px 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+  color: var(--text);
+  background: #f1ece7;
+  border: 1px solid #ddd7d1;
+  border-radius: 8px;
+}
+
+.reader-meta .status-pill {
+  padding: 3px 9px;
+}
+
+a.copy-link {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
 /* ───── Hover 微交互 ───── */
 .ckpt-title,
 .project-main h3 {

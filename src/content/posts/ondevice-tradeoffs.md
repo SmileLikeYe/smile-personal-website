@@ -1,7 +1,7 @@
 ---
 title: "把大模型塞进手机：端侧推理的三个工程取舍"
 slug: "ondevice-tradeoffs"
-date: "2026-07-02"
+date: "2025-12-14"
 type: "Build"
 adapter: "Mobile AI"
 summary: "在 iPhone 上跑本地模型一年，我最终把所有决策收敛成三个取舍：延迟换质量、内存换能力、隐私换生态。"

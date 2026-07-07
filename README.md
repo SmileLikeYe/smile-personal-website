@@ -96,6 +96,14 @@ install dependencies → build → upload dist → deploy pages
 
 3. 保存即可，构建时会自动扫描该目录，无需注册。
 
+## 怎么发布一个新 skill
+
+1. 在 `src/content/skills/` 下新建 `.md` 文件（文件名即 slug，站内地址 `/#skill/<slug>`）。
+2. frontmatter 字段：`index`（S1/S2…）、`name`（英文名）、`zh`（中文名）、`desc`（一句话）、
+   `status`（`live` 已发布 / `draft` 草稿可读 / `soon` 占位）、`source`（GitHub 源码链接，可选）、
+   `post`（关联文章 slug，可选）。
+3. 正文就是 skill 全文，站内直接可读，无需注册。
+
 ## 怎么改站点内容
 
 个人信息、About、全平台信号台（channels）、Skills、项目（projects）、排队清单（queued）

@@ -1,7 +1,7 @@
 ---
 title: "做了一年个人 AI，我重新理解了「记忆」"
 slug: "personal-ai-memory"
-date: "2026-06-29"
+date: "2026-01-18"
 type: "Build"
 adapter: "PIN AI"
 summary: "个人 AI 的护城河不是模型，是上下文的积累方式。记忆系统的关键不是存得多，而是取得准、忘得对。"
