@@ -2248,6 +2248,41 @@ a.ctx-int:hover {
   transform: translate(2px, -2px);
 }
 
+/* 面板标题 = 首页目录：01-05 可点击跳对应板块 */
+.panel-link {
+  display: block;
+  cursor: pointer;
+}
+
+.panel-link h2 {
+  transition: color 160ms ease;
+}
+
+.panel-link::after {
+  content: "↓";
+  position: absolute;
+  top: 16px;
+  right: 14px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity 180ms ease, transform 200ms var(--ease-out);
+}
+
+.panel-step:hover .panel-link::after,
+.runtime-context:hover .panel-link::after,
+.outputs:hover .panel-link::after,
+.eval-loop:hover .panel-link::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel-link:hover h2 {
+  color: var(--blue);
+}
+
 /* ───── Hover 微交互 ───── */
 .ckpt-title,
 .project-main h3 {

@@ -47,9 +47,9 @@ const heroItem = {
 const navItems = [
   { id: "about", label: "ABOUT" },
   { id: "writing", label: "WRITING" },
+  { id: "context", label: "CONTEXT" },
   { id: "skills", label: "SKILLS" },
   { id: "build", label: "BUILD" },
-  { id: "context", label: "CONTEXT" },
   { id: "contact", label: "CONTACT" },
 ];
 
@@ -219,9 +219,11 @@ function TrainingPanel() {
       </div>
 
       <div className="pretraining panel-step">
-        <span className="step-index blue">01</span>
-        <h2>Pre-training</h2>
-        <p>Foundation</p>
+        <a className="panel-link" href="#about" aria-label="跳到 About">
+          <span className="step-index blue">01</span>
+          <h2>Pre-training</h2>
+          <p>Foundation</p>
+        </a>
         <strong>Tongji University<br />Computer Science</strong>
         <div className="stack-list">
           {pretraining.map((item) => (
@@ -239,9 +241,11 @@ function TrainingPanel() {
       </div>
 
       <div className="finetuning panel-step">
-        <span className="step-index green">02</span>
-        <h2>Fine-tuning</h2>
-        <p>Adapters</p>
+        <a className="panel-link" href="#writing" aria-label="跳到 Training Log">
+          <span className="step-index green">02</span>
+          <h2>Fine-tuning</h2>
+          <p>Adapters</p>
+        </a>
         <div className="adapter-list">
           {adapters.map(({ title, subtitle, icon: Icon, href }) => (
             <a className="adapter" href={href} target="_blank" rel="noreferrer" key={title}>
@@ -257,9 +261,11 @@ function TrainingPanel() {
       </div>
 
       <div className="runtime-context">
-        <span className="step-index blue">03</span>
-        <h2>Runtime Context</h2>
-        <p>Real-world input</p>
+        <a className="panel-link" href="#context" aria-label="跳到 Context">
+          <span className="step-index blue">03</span>
+          <h2>Runtime Context</h2>
+          <p>Real-world input</p>
+        </a>
         <div>
           {contextItems.map((item) => (
             <button type="button" key={item}>{item}</button>
@@ -268,9 +274,11 @@ function TrainingPanel() {
       </div>
 
       <div className="outputs">
-        <span className="step-index red">04</span>
-        <h2>Outputs</h2>
-        <p>Shipped value</p>
+        <a className="panel-link" href="#skills" aria-label="跳到 Adapters">
+          <span className="step-index red">04</span>
+          <h2>Outputs</h2>
+          <p>Shipped value</p>
+        </a>
         <div className="output-list">
           {outputs.map(({ title, subtitle, icon: Icon, href }) => {
             const external = href.startsWith("http");
@@ -293,9 +301,11 @@ function TrainingPanel() {
       </div>
 
       <div className="eval-loop">
-        <span className="step-index amber">05</span>
-        <h2>Evaluation Loop</h2>
-        <p>Observe → Evaluate → Improve → Ship</p>
+        <a className="panel-link" href="#build" aria-label="跳到 Build">
+          <span className="step-index amber">05</span>
+          <h2>Evaluation Loop</h2>
+          <p>Observe → Evaluate → Improve → Ship</p>
+        </a>
         <Pulse size={36} weight="duotone" />
       </div>
     </section>
@@ -579,7 +589,7 @@ function SkillRow({ skill, delay = 0 }) {
 function SkillsSection() {
   return (
     <section className="skills" id="skills" aria-labelledby="skills-title">
-      <SectionHead index="03" kicker="SKILLS" title="Adapters">
+      <SectionHead index="04" kicker="SKILLS" title="Adapters">
         <p className="section-note" data-reveal="">
           淀 — DISTILL · 把重复的工作方式
           <br />
@@ -625,7 +635,7 @@ function GhStars({ repo, fallback }) {
 function BuildSection() {
   return (
     <section className="build" id="build" aria-labelledby="build-title">
-      <SectionHead index="04" kicker="BUILD" title="Build">
+      <SectionHead index="05" kicker="BUILD" title="Build">
         <p className="section-note" data-reveal="">
           建 — BUILD · 每一条战绩
           <br />
@@ -761,7 +771,7 @@ function ContextSection() {
   const recent = contextDocs.slice(0, 4);
   return (
     <section className="context-section" id="context" aria-labelledby="context-title">
-      <SectionHead index="05" kicker="CONTEXT" title="Context">
+      <SectionHead index="03" kicker="CONTEXT" title="Context">
         <p className="section-note" data-reveal="">
           外部输入 · 收藏与想法
           <br />
@@ -1329,9 +1339,9 @@ export function App() {
             <Hero />
             <AboutSection />
             <WritingSection />
+            <ContextSection />
             <SkillsSection />
             <BuildSection />
-            <ContextSection />
             <ContactSection />
           </m.main>
         )}
