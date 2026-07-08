@@ -8,11 +8,32 @@
 
 如果简历回答的是“我做过什么”，这里更关心“我如何形成判断”。
 
+## 思路：整个网站是一个「大模型」
+
+首页右侧的训练面板把 Smile Hu 标注成一个大模型，它同时是全站的**目录**——
+面板上的编号块可点击，与下方板块顺序、菜单顺序严格一一对应：
+
+| # | 面板 | 板块 | 含义 |
+| --- | --- | --- | --- |
+| 01 | Pre-training | About me | 教育与背景 = 预训练 |
+| 02 | Runtime Context | Context（收藏与想法） | 外部输入 = 运行时上下文 |
+| 03 | Fine-tuning | Training Log（文章） | 微调过程产生训练日志 |
+| 04 | Outputs | Adapters（skills） | 沉淀出的可安装输出 |
+| 05 | Evaluation Loop（→ Ship） | Build（战绩） | 循环的终点是交付 |
+| 06 | — | Contact | Let's talk. |
+
+内容循环是 **写 WRITE → 建 BUILD → 淀 DISTILL**：文章、产品、skill 先在本站沉淀，
+再经 Serving Endpoints（GitHub / X / RSS / 小红书…）分发出去。
+Context 区是输入端：收藏的文章带 LLM 总结与批注，**收藏的终点是内化**——
+每条都要有内化去向（进了哪个 skill / 文章 / 代码），否则就该删。
+
 ## Stack
 
-- React 19 + Vite
-- Markdown blog posts loaded from `src/content/posts/*.md`
-- No backend — everything is static and deployable to any static host
+- React 19 + Vite，纯静态，无后端
+- 三类内容都是 Markdown：文章 `src/content/posts/*.md`、
+  skill `src/content/skills/*.md`、收藏 `src/content/context/*.md`
+- 构建前自动生成 `public/rss.xml`（`scripts/gen-rss.mjs`，prebuild 钩子）
+- 可安装的 Claude skills 在 `.claude/skills/`（ai-design / agent-delivery / eval-driven / collect）
 
 ## Commands
 
@@ -118,23 +139,35 @@ install dependencies → build → upload dist → deploy pages
 
 ## 怎么改站点内容
 
-个人信息、About、全平台信号台（channels）、Skills、项目（projects）、排队清单（queued）
-都集中在 `src/content/site.js`，直接改字段即可，不用动组件。
-标了 `[MOCK]` 的数字和链接是占位符，替换成真实数据。
-新开一个平台账号时，把 `channels` 里对应条目的 `status` 从 `"soon"` 改成 `"live"` 并补上 `href`。
+个人信息、About、Serving Endpoints（endpoints）、项目（projects）、now training 清单
+（nowTraining）、打字机文案（statusLines）都集中在 `src/content/site.js`，直接改字段即可。
+新开一个平台账号时，把 `endpoints` 里对应条目的 `status` 从 `"soon"` 改成 `"200"` 并补上 `href`。
 
 ## Design Direction
 
-网站围绕“个人能力模型”展开：教育和基础能力像 pre-training，真实项目和 AI 产品实践像 fine-tuning，文章、开源贡献、产品交付和方法论是最终输出。
-
-视觉上保持克制、清晰、偏编辑型，让访问者快速理解：我是谁、我在构建什么、我有什么可验证的输出。
+视觉遵循 `docs/design-reference.md`（Monad）：暖羊皮纸底、衬线标题（weight 400）、
+全 mono UI、单一 Lake Blue 强调、细线 + 胶囊按钮。动效遵循 Emil Kowalski 标准
+（<300ms、强 ease-out、只动 transform/opacity），桌面端有板块滚动吸附。
+布局是编辑刊骨架，但所有板块组件都长在「大模型」隐喻上，不借用其他网站的招牌组件。
 
 ## Structure
 
-- `src/App.jsx` — 页面区块与交互（scroll-spy、hash 路由、reveal 动画）
+- `src/App.jsx` — 页面区块与交互（hash 路由 + 导航栈、二级页、scroll-spy、reveal 动画）
 - `src/MarkdownBody.jsx` — 懒加载的 Markdown 渲染器（react-markdown 不进首屏 bundle）
-- `src/content/site.js` — 所有可编辑的站点文案与数据
-- `src/content/posts.js` — Markdown 文章的加载与 frontmatter 解析
+- `src/content/site.js` — 站点文案与数据（profile / about / endpoints / projects…）
+- `src/content/posts.js|skills.js|context.js` — 三类 Markdown 内容的加载与 frontmatter 解析
 - `src/styles.css` — 响应式布局与动画系统
-- `public/assets/` — 站点图片资源
+- `scripts/gen-rss.mjs` — 构建前生成 RSS
+- `.claude/skills/` — 可安装的 Claude skills（含 collect 收藏工作流）
 - `docs/maintenance.md` — 代码结构、内容编辑、部署和验证清单
+
+### 路由一览
+
+| 地址 | 内容 |
+| --- | --- |
+| `/#about` … `/#contact` | 首页板块锚点（01-06） |
+| `/#post/<slug>` | 文章二级页（阅读进度条 + 返回栈） |
+| `/#skill/<name>` | skill 二级页 |
+| `/#ctx/<slug>` | 收藏/想法二级页（顶部原文引用条） |
+| `/#library` `/#library/skills` `/#library/context` | 全部内容页，三 tab + 实时搜索 |
+| `/rss.xml` | RSS 订阅 |

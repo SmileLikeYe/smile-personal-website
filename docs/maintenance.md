@@ -9,14 +9,31 @@
 ```mermaid
 flowchart LR
   A["src/content/site.js"] --> D["React UI"]
-  B["src/content/posts/*.md"] --> C["src/content/posts.js"]
+  B["posts/*.md + skills/*.md + context/*.md"] --> C["posts.js / skills.js / context.js"]
   C --> D
+  B --> R["scripts/gen-rss.mjs (prebuild)"]
+  R --> F
   D --> E["Vite build"]
   E --> F["dist/"]
   F --> G["GitHub Pages"]
   G --> H["smileflow.cn"]
   H --> I["Cloudflare Web Analytics"]
 ```
+
+## 板块顺序（不要打乱）
+
+首页面板是全站目录，编号块可点击，与板块顺序、菜单顺序严格对应：
+
+```text
+01 Pre-training     → #about    About me
+02 Runtime Context  → #context  Context（收藏与想法）
+03 Fine-tuning      → #writing  Training Log（文章）
+04 Outputs          → #skills   Adapters（skills）
+05 Evaluation Loop  → #build    Build（战绩）
+06                  → #contact  Contact
+```
+
+新增/调整板块时，三处必须同步：面板 step-index、首页渲染顺序、navItems 顺序。
 
 ## 常用命令
 
@@ -41,16 +58,20 @@ npm run build
 
 ```text
 src/
-  App.jsx              页面区块、hash 路由、文章阅读器、动画入口
+  App.jsx              页面区块、hash 路由 + 导航栈、三类二级页、动画入口
   MarkdownBody.jsx     Markdown 渲染器，懒加载，降低首屏 bundle 压力
   content/
-    site.js            个人资料、项目、skills、渠道、联系文案
-    posts.js           自动扫描并解析 posts/*.md
-    posts/*.md         文章正文
-  styles.css           全局样式、响应式布局、动效
+    site.js            个人资料、endpoints、projects、nowTraining、statusLines
+    posts.js|skills.js|context.js   三类 Markdown 的扫描与 frontmatter 解析
+    posts/*.md         文章
+    skills/*.md        skill（原创 + 收藏，收藏必须带 author/source 与出处声明）
+    context/*.md       收藏与想法（collect skill 入库，见 README 日常用法）
+  styles.css           全局样式、响应式布局、动效、板块滚动吸附
+scripts/gen-rss.mjs    构建前生成 public/rss.xml（npm prebuild 自动执行）
+.claude/skills/        可安装 Claude skills（ai-design/agent-delivery/eval-driven/collect）
 public/
-  assets/              头像、背景图等静态资源
-index.html             HTML 入口、SEO meta、Cloudflare Analytics beacon
+  assets/              头像、背景图（WebP）等静态资源
+index.html             HTML 入口、SEO meta、JSON-LD、RSS alternate、Analytics beacon
 ```
 
 ## 改站点内容
@@ -61,13 +82,12 @@ index.html             HTML 入口、SEO meta、Cloudflare Analytics beacon
 
 - `profile`：姓名、邮箱、GitHub、X、hero 标语。
 - `about`：About 区块的 bio 和规格信息。
-- `endpoints`：外部分发平台和状态。
-- `skills`：可复用方法论条目。
-- `projects`：Build 区展示项目。
+- `endpoints`：Serving Endpoints 分发平台和状态（"200" 已上线 / "soon" 筹备中）。
+- `projects`：Build 区项目（agent-chief 带 `ghRepo` 实时 star 徽章）。
 - `nowTraining`：正在准备的事项。
-- `statusLines`：Contact 区循环状态文案。
+- `statusLines`：Contact 区打字机循环文案。
 
-标了 `[MOCK]` 的内容是占位，替换前要确认真实数据。
+skills 与收藏不在 site.js——分别在 `src/content/skills/*.md` 和 `src/content/context/*.md`。
 
 ## 发文章
 
@@ -101,10 +121,13 @@ status: "Published"
 
 ## 路由和交互
 
-- 主导航使用普通 hash：`#about`、`#writing`、`#skills`、`#build`、`#contact`。
-- 文章深链接使用 `#post/<slug>`。
-- `src/App.jsx` 里有 `hashchange` 监听，负责在文章列表和阅读器之间切换。
-- 文章阅读器使用 `AnimatePresence` 做进入/退出过渡。
+- 主导航 hash：`#about`、`#context`、`#writing`、`#skills`、`#build`、`#contact`（顺序即 01-06）。
+- 二级页：文章 `#post/<slug>`、skill `#skill/<name>`、收藏 `#ctx/<slug>`——
+  整页替换首页，顶部 2px 阅读进度条，`AnimatePresence` 换页。
+- `#library`（/skills、/context）：全部内容页，三 tab + 实时搜索。
+- 返回按钮走导航栈（`navStack`）：从哪个列表/页面进来就回哪里，
+  浏览器自带后退通过 hashchange 的 oldURL/newURL 对比出栈。
+- 桌面端板块滚动吸附（`scroll-snap-type: y mandatory`，超高板块内部自由滚动）。
 - 页面滚动入场使用 `[data-reveal]` 和 `.revealed`，由 `IntersectionObserver` 控制。
 
 ## 动效约定
@@ -221,10 +244,11 @@ curl -sS -L https://smileflow.cn/ | rg "cloudflareinsights|data-cf-beacon"
 
 如果改了视觉或交互，至少本地打开页面检查：
 
-- 桌面首屏是否正常。
-- 移动端是否没有文字溢出。
-- 文章深链接 `#post/<slug>` 是否能打开。
-- 导航 hash 是否能滚到对应区块。
+- 桌面首屏是否正常，面板 01-05 点击是否跳到对应板块。
+- 移动端是否没有文字溢出，头部第二行导航是否可横滑。
+- 三类深链接（`#post/` `#skill/` `#ctx/`）是否能打开，返回是否回到来源列表。
+- `#library` 三个 tab 与搜索是否正常。
+- `dist/rss.xml` 是否生成且包含最新文章。
 
 ## 不要提交的本地文件
 

@@ -46,8 +46,8 @@ const heroItem = {
 
 const navItems = [
   { id: "about", label: "ABOUT" },
-  { id: "writing", label: "WRITING" },
   { id: "context", label: "CONTEXT" },
+  { id: "writing", label: "WRITING" },
   { id: "skills", label: "SKILLS" },
   { id: "build", label: "BUILD" },
   { id: "contact", label: "CONTACT" },
@@ -242,7 +242,7 @@ function TrainingPanel() {
 
       <div className="finetuning panel-step">
         <a className="panel-link" href="#writing" aria-label="跳到 Training Log">
-          <span className="step-index green">02</span>
+          <span className="step-index green">03</span>
           <h2>Fine-tuning</h2>
           <p>Adapters</p>
         </a>
@@ -262,7 +262,7 @@ function TrainingPanel() {
 
       <div className="runtime-context">
         <a className="panel-link" href="#context" aria-label="跳到 Context">
-          <span className="step-index blue">03</span>
+          <span className="step-index blue">02</span>
           <h2>Runtime Context</h2>
           <p>Real-world input</p>
         </a>
@@ -495,7 +495,7 @@ function WritingSection() {
   const recent = posts.slice(0, 4);
   return (
     <section className="writing" id="writing" aria-labelledby="writing-title">
-      <SectionHead index="02" kicker="WRITING" title="Training Log">
+      <SectionHead index="03" kicker="WRITING" title="Training Log">
         <p className="section-note" data-reveal="">
           写 — WRITE · 训练日志
           <br />
@@ -771,7 +771,7 @@ function ContextSection() {
   const recent = contextDocs.slice(0, 4);
   return (
     <section className="context-section" id="context" aria-labelledby="context-title">
-      <SectionHead index="03" kicker="CONTEXT" title="Context">
+      <SectionHead index="02" kicker="CONTEXT" title="Context">
         <p className="section-note" data-reveal="">
           外部输入 · 收藏与想法
           <br />
@@ -1338,8 +1338,8 @@ export function App() {
           >
             <Hero />
             <AboutSection />
-            <WritingSection />
             <ContextSection />
+            <WritingSection />
             <SkillsSection />
             <BuildSection />
             <ContactSection />
