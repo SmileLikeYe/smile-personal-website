@@ -803,15 +803,16 @@ function CtxPage({ item }) {
           </button>
           <div className="reader-meta">
             <span className={`ctx-kind ctx-kind-${item.kind}`}>{ctxKindText[item.kind]}</span>
-            {item.author && <span>{item.author}</span>}
-            <span>{formatDate(item.saved)}</span>
-            {item.url && (
-              <a className="copy-link" href={item.url} target="_blank" rel="noreferrer">
-                原文 <ArrowUpRight size={13} weight="bold" />
-              </a>
-            )}
+            <span>收藏于 {formatDate(item.saved)}</span>
           </div>
         </div>
+        {item.url && (
+          <a className="ctx-source-line" href={item.url} target="_blank" rel="noreferrer">
+            <span className="ctx-source-label">原文{item.author ? ` · ${item.author}` : ""}</span>
+            <span className="ctx-source-url">{item.url}</span>
+            <ArrowUpRight size={14} weight="bold" />
+          </a>
+        )}
         <h1 className="reader-title">{item.title}</h1>
         <p className="reader-summary">{item.takeaway}</p>
         <div className="reader-tags">
