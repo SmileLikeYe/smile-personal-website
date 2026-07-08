@@ -96,6 +96,18 @@ install dependencies → build → upload dist → deploy pages
 
 3. 保存即可，构建时会自动扫描该目录，无需注册。
 
+## 怎么收藏文章 / 记想法（日常用法）
+
+在本仓库里对 Claude 说一句话即可（`collect` skill 会接管全流程）：
+
+- **收藏文章**：`收藏 https://example.com/some-post` → 自动抓取、生成 LLM 总结与批注、
+  建议内化去向，写入 `src/content/context/<slug>.md` 并提交
+- **记想法**：`记个想法：……` → 整理成 `kind: "idea"` 的条目
+- 条目出现在首页 Context 区和 Library 的 Context tab（可搜索），
+  详情页地址 `/#ctx/<slug>`
+- `internalized` 字段记录内化去向（`skill:名` / `post:slug` / `code:仓库`），
+  未内化的条目显示"待内化"——定期清点：要么内化，要么删
+
 ## 怎么发布一个新 skill
 
 1. 在 `src/content/skills/` 下新建 `.md` 文件（文件名即 slug，站内地址 `/#skill/<slug>`）。

@@ -2103,6 +2103,108 @@ a.copy-link {
   background: rgba(236, 218, 152, 0.28);
 }
 
+/* ───── Context 收藏区 ───── */
+.ctx-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 92px 20px;
+  gap: clamp(18px, 3vw, 44px);
+  align-items: baseline;
+  width: 100%;
+  padding: 24px 6px;
+  border-bottom: 1px solid var(--soft-line);
+}
+
+.ctx-row:hover {
+  background: rgba(43, 89, 209, 0.035);
+}
+
+.ctx-kind {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.ctx-kind-article {
+  color: var(--blue);
+  background: rgba(43, 89, 209, 0.07);
+  border: 1px solid rgba(43, 89, 209, 0.3);
+}
+
+.ctx-kind-idea {
+  color: var(--amber);
+  background: rgba(236, 218, 152, 0.16);
+  border: 1px solid rgba(176, 141, 42, 0.4);
+}
+
+.ctx-body {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.ctx-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.35;
+  transition: transform 220ms var(--ease-out);
+}
+
+.ctx-row:hover .ctx-title {
+  transform: translateX(6px);
+}
+
+.ctx-takeaway {
+  max-width: 40em;
+  font-family: var(--serif);
+  font-size: 14.5px;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.ctx-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.ctx-src {
+  color: var(--blue);
+}
+
+.ctx-int {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--green);
+  background: var(--green-soft);
+  border-radius: 999px;
+}
+
+a.ctx-int:hover {
+  background: rgba(47, 158, 99, 0.22);
+}
+
+.ctx-int-pending {
+  color: var(--muted);
+  background: none;
+  border: 1px dashed var(--line);
+}
+
 /* ───── Hover 微交互 ───── */
 .ckpt-title,
 .project-main h3 {
@@ -2422,7 +2524,8 @@ a.crow:hover .crow-label {
     display: none;
   }
 
-  .ckpt {
+  .ckpt,
+  .ctx-row {
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
     padding: 22px 4px;

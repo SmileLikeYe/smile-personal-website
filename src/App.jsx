@@ -24,6 +24,7 @@ import { AnimatePresence, LazyMotion, domAnimation, m, useScroll } from "motion/
 import { featuredPost, posts } from "./content/posts";
 import { about, endpoints, loop, nowTraining, profile, projects, statusLines } from "./content/site";
 import { skillDocs } from "./content/skills";
+import { contextDocs } from "./content/context";
 
 const MarkdownBody = lazy(() => import("./MarkdownBody"));
 
@@ -48,6 +49,7 @@ const navItems = [
   { id: "writing", label: "WRITING" },
   { id: "skills", label: "SKILLS" },
   { id: "build", label: "BUILD" },
+  { id: "context", label: "CONTEXT" },
   { id: "contact", label: "CONTACT" },
 ];
 
@@ -404,9 +406,16 @@ function getHashRoute() {
     const skill = skillDocs.find((item) => item.name === name);
     if (skill) return { type: "skill", skill };
   }
+  const ctxMatch = hash.match(/^#ctx\/(.+)$/);
+  if (ctxMatch) {
+    const slug = decodeURIComponent(ctxMatch[1]);
+    const item = contextDocs.find((doc) => doc.slug === slug);
+    if (item) return { type: "ctx", item };
+  }
   const libraryMatch = hash.match(/^#library(?:\/(\w+))?$/);
   if (libraryMatch) {
-    return { type: "library", tab: libraryMatch[1] === "skills" ? "skills" : "posts" };
+    const tab = libraryMatch[1] === "skills" ? "skills" : libraryMatch[1] === "context" ? "context" : "posts";
+    return { type: "library", tab };
   }
   return null;
 }
@@ -697,13 +706,147 @@ function EmailRow() {
   );
 }
 
+const ctxKindText = { article: "收藏", idea: "想法" };
+
+function InternalizedChip({ value }) {
+  if (!value) {
+    return <span className="ctx-int ctx-int-pending">待内化</span>;
+  }
+  const [target, name] = value.split(":");
+  const href = target === "skill" ? `#skill/${name}` : target === "post" ? `#post/${name}` : null;
+  const label = `→ ${name}`;
+  return href ? (
+    <a className="ctx-int" href={href}>
+      {label}
+    </a>
+  ) : (
+    <span className="ctx-int">{label}</span>
+  );
+}
+
+function domainOf(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+}
+
+function ContextRow({ item, delay = 0 }) {
+  const { slug, title, url, author, saved, kind, takeaway, internalized } = item;
+  return (
+    <a
+      className="ctx-row"
+      href={`#ctx/${slug}`}
+      data-reveal=""
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <span className={`ctx-kind ctx-kind-${kind}`}>{ctxKindText[kind]}</span>
+      <span className="ctx-body">
+        <strong className="ctx-title">{title}</strong>
+        <span className="ctx-takeaway">{takeaway}</span>
+        <span className="ctx-meta">
+          {author && <span>{author}</span>}
+          {url && <span className="ctx-src">{domainOf(url)}</span>}
+          <InternalizedChip value={internalized} />
+        </span>
+      </span>
+      <span className="ckpt-date">{formatDate(saved)}</span>
+      <ArrowUpRight className="ckpt-arr" size={16} weight="bold" />
+    </a>
+  );
+}
+
+function ContextSection() {
+  const recent = contextDocs.slice(0, 4);
+  return (
+    <section className="context-section" id="context" aria-labelledby="context-title">
+      <SectionHead index="05" kicker="CONTEXT" title="Context">
+        <p className="section-note" data-reveal="">
+          外部输入 · 收藏与想法
+          <br />
+          收藏的终点是内化
+        </p>
+      </SectionHead>
+      <div className="tlog">
+        {recent.map((item, index) => (
+          <ContextRow item={item} delay={index * 45} key={item.slug} />
+        ))}
+      </div>
+      <a className="more-link" href="#library/context" data-reveal="">
+        全部 {contextDocs.length} 条 · 可搜索 <ArrowRight size={14} weight="bold" />
+      </a>
+    </section>
+  );
+}
+
+function CtxPage({ item }) {
+  const { scrollYProgress } = useScroll();
+
+  const goBack = () => {
+    navBack("#context");
+  };
+
+  return (
+    <m.main
+      className="post-page"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.26, ease: easeOutStrong }}
+    >
+      <m.div className="read-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
+      <article className="post-article">
+        <div className="reader-bar">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 全部收藏
+          </button>
+          <div className="reader-meta">
+            <span className={`ctx-kind ctx-kind-${item.kind}`}>{ctxKindText[item.kind]}</span>
+            {item.author && <span>{item.author}</span>}
+            <span>{formatDate(item.saved)}</span>
+            {item.url && (
+              <a className="copy-link" href={item.url} target="_blank" rel="noreferrer">
+                原文 <ArrowUpRight size={13} weight="bold" />
+              </a>
+            )}
+          </div>
+        </div>
+        <h1 className="reader-title">{item.title}</h1>
+        <p className="reader-summary">{item.takeaway}</p>
+        <div className="reader-tags">
+          {item.tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+          <InternalizedChip value={item.internalized} />
+        </div>
+        <Suspense fallback={<div className="markdown-body markdown-loading">Loading…</div>}>
+          <MarkdownBody content={item.content} />
+        </Suspense>
+        <div className="post-page-foot">
+          <button className="btn-back" type="button" onClick={goBack}>
+            <ArrowLeft size={14} weight="bold" /> 返回全部收藏
+          </button>
+          <button
+            className="to-top-btn"
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            回到顶部 ↑
+          </button>
+        </div>
+      </article>
+    </m.main>
+  );
+}
+
 function ContactSection() {
   return (
     <section className="contact" id="contact" aria-labelledby="contact-title">
       <div className="contact-layout">
         <div className="contact-left">
           <p className="section-kicker" data-reveal="">
-            CONTACT — 05
+            CONTACT — 06
           </p>
           <h2 className="section-title" id="contact-title" data-reveal="">
             Let's talk.
@@ -952,9 +1095,17 @@ function LibraryPage({ initialTab }) {
   const filteredSkills = skillDocs.filter(
     (skill) => !q || [skill.zh, skill.name, skill.desc, skill.author || ""].join(" ").toLowerCase().includes(q),
   );
+  const filteredCtx = contextDocs.filter(
+    (item) =>
+      !q ||
+      [item.title, item.takeaway, item.author || "", ...(item.tags || [])]
+        .join(" ")
+        .toLowerCase()
+        .includes(q),
+  );
 
   const goBack = () => {
-    window.location.hash = tab === "skills" ? "#skills" : "#writing";
+    window.location.hash = tab === "skills" ? "#skills" : tab === "context" ? "#context" : "#writing";
   };
 
   return (
@@ -971,7 +1122,11 @@ function LibraryPage({ initialTab }) {
             <ArrowLeft size={14} weight="bold" /> 返回
           </button>
           <span className="library-count">
-            {tab === "posts" ? `${filteredPosts.length} / ${posts.length} 篇` : `${filteredSkills.length} / ${skillDocs.length} 个`}
+            {tab === "posts"
+              ? `${filteredPosts.length} / ${posts.length} 篇`
+              : tab === "skills"
+                ? `${filteredSkills.length} / ${skillDocs.length} 个`
+                : `${filteredCtx.length} / ${contextDocs.length} 条`}
           </span>
         </div>
 
@@ -1004,13 +1159,27 @@ function LibraryPage({ initialTab }) {
             >
               Skills {skillDocs.length}
             </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === "context"}
+              className={tab === "context" ? "active" : ""}
+              onClick={() => {
+                setTab("context");
+                window.history.replaceState(null, "", "#library/context");
+              }}
+            >
+              Context {contextDocs.length}
+            </button>
           </div>
           <label className="library-search">
             <MagnifyingGlass size={15} />
             <input
               type="search"
               value={query}
-              placeholder={tab === "posts" ? "搜索标题 / 摘要 / 标签…" : "搜索 skill…"}
+                placeholder={
+                tab === "posts" ? "搜索标题 / 摘要 / 标签…" : tab === "skills" ? "搜索 skill…" : "搜索收藏 / 想法…"
+              }
               onChange={(event) => setQuery(event.target.value)}
             />
           </label>
@@ -1025,13 +1194,22 @@ function LibraryPage({ initialTab }) {
               <p className="library-empty">没有匹配「{query}」的文章 —— 换个关键词试试。</p>
             )}
           </div>
-        ) : (
+        ) : tab === "skills" ? (
           <div className="skill-list library-list">
             {filteredSkills.map((skill) => (
               <SkillRow skill={skill} key={skill.name} />
             ))}
             {filteredSkills.length === 0 && (
               <p className="library-empty">没有匹配「{query}」的 skill —— 换个关键词试试。</p>
+            )}
+          </div>
+        ) : (
+          <div className="tlog library-list">
+            {filteredCtx.map((item) => (
+              <ContextRow item={item} key={item.slug} />
+            ))}
+            {filteredCtx.length === 0 && (
+              <p className="library-empty">没有匹配「{query}」的收藏 —— 换个关键词试试。</p>
             )}
           </div>
         )}
@@ -1095,7 +1273,9 @@ export function App() {
       ? route.post.slug
       : route.type === "skill"
         ? `skill-${route.skill.name}`
-        : "library"
+        : route.type === "ctx"
+          ? `ctx-${route.item.slug}`
+          : "library"
     : "home";
 
   useEffect(() => {
@@ -1108,6 +1288,8 @@ export function App() {
         ? `${route.post.title} — Smile Hu`
         : route?.type === "skill"
           ? `${route.skill.zh}（skill）— Smile Hu`
+          : route?.type === "ctx"
+          ? `${route.item.title} · Context — Smile Hu`
           : route?.type === "library"
             ? "Library — Smile Hu"
             : base;
@@ -1131,6 +1313,8 @@ export function App() {
           <PostPage post={route.post} key={route.post.slug} />
         ) : route?.type === "skill" ? (
           <SkillPage skill={route.skill} key={`skill-${route.skill.name}`} />
+        ) : route?.type === "ctx" ? (
+          <CtxPage item={route.item} key={`ctx-${route.item.slug}`} />
         ) : route?.type === "library" ? (
           <LibraryPage initialTab={route.tab} key="library" />
         ) : (
@@ -1146,6 +1330,7 @@ export function App() {
             <WritingSection />
             <SkillsSection />
             <BuildSection />
+            <ContextSection />
             <ContactSection />
           </m.main>
         )}
