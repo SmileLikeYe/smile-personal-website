@@ -108,6 +108,12 @@ export const projects = [
     href: "https://github.com/SmileLikeYe/agent-chief",
     ghRepo: "SmileLikeYe/agent-chief",
     ghStarsFallback: 155,
+    video: {
+      src: "/assets/projects/agent-chief-showcase.mp4",
+      poster: "/assets/projects/agent-chief-showcase-poster.jpg",
+      label: "SHOWCASE · 10 SEC PRODUCT FILM",
+      title: "agent-chief cinematic demo",
+    },
     links: [
       { label: "GitHub", href: "https://github.com/SmileLikeYe/agent-chief" },
       { label: "Star ⭐", href: "https://github.com/SmileLikeYe/agent-chief/stargazers" },

@@ -644,7 +644,7 @@ function BuildSection() {
       </SectionHead>
 
       <div className="build-list">
-        {projects.map(({ tag, title, role, body, stack, status, href, links, ghRepo, ghStarsFallback }, index) => (
+        {projects.map(({ tag, title, role, body, stack, status, href, links, ghRepo, ghStarsFallback, video }, index) => (
           <div className="project-row" key={title} data-reveal="" style={{ animationDelay: `${index * 50}ms` }}>
             <span className="project-idx">{String(index + 1).padStart(2, "0")}</span>
             <div className="project-main">
@@ -674,6 +674,23 @@ function BuildSection() {
               <span className={`status-pill status-${status === "SHIPPED" ? "live" : "soon"}`}>{status}</span>
               <span className="project-stack">{stack.join(" · ")}</span>
             </div>
+            {video && (
+              <figure className="project-media">
+                <div className="project-media-head">
+                  <span>{video.label}</span>
+                  <b>{video.title}</b>
+                </div>
+                <video
+                  src={video.src}
+                  poster={video.poster}
+                  preload="metadata"
+                  muted
+                  playsInline
+                  controls
+                  aria-label={video.title}
+                />
+              </figure>
+            )}
           </div>
         ))}
       </div>
