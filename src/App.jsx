@@ -702,7 +702,6 @@ function BuildSection() {
                   src={video.src}
                   poster={video.poster}
                   preload="metadata"
-                  muted
                   playsInline
                   controls
                   aria-label={video.title}

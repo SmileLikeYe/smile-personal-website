@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check:agent-chief-stars": "node scripts/check-agent-chief-stars.mjs",
+    "check:showcase-video-audio": "node scripts/check-showcase-video-audio.mjs",
     "prebuild": "node scripts/gen-rss.mjs"
   },
   "dependencies": {
