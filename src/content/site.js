@@ -107,7 +107,7 @@ export const projects = [
     status: "ONGOING",
     href: "https://github.com/SmileLikeYe/agent-chief",
     ghRepo: "SmileLikeYe/agent-chief",
-    ghStarsFallback: 155,
+    ghStarsFallback: 319,
     video: {
       src: "/assets/projects/agent-chief-showcase.mp4",
       poster: "/assets/projects/agent-chief-showcase-poster.jpg",

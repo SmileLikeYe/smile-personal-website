@@ -172,7 +172,14 @@ const adapters = [
   { title: "Zhipu AI", subtitle: "FDE · 微调 / 共创", icon: BracketsCurly, href: "https://bigmodel.cn/" },
   { title: "SAP", subtitle: "Full-stack · 4 端", icon: Phone, href: "https://play.google.com/store/apps/details?id=b1.sales.mobile.android&hl=en_GB" },
   { title: "MTEB", subtitle: "2yr+ Contributor", icon: ChartLineUp, href: "https://github.com/embeddings-benchmark/mteb/" },
-  { title: "agent-chief", subtitle: "OSS · ★155+", icon: TerminalWindow, href: "https://github.com/SmileLikeYe/agent-chief" },
+  {
+    title: "agent-chief",
+    subtitle: "OSS",
+    icon: TerminalWindow,
+    href: "https://github.com/SmileLikeYe/agent-chief",
+    ghRepo: "SmileLikeYe/agent-chief",
+    ghStarsFallback: 319,
+  },
 ];
 
 const contextItems = ["User needs", "Product problems", "Codebase", "Research", "Feedback"];
@@ -247,12 +254,20 @@ function TrainingPanel() {
           <p>Adapters</p>
         </a>
         <div className="adapter-list">
-          {adapters.map(({ title, subtitle, icon: Icon, href }) => (
+          {adapters.map(({ title, subtitle, icon: Icon, href, ghRepo, ghStarsFallback }) => (
             <a className="adapter" href={href} target="_blank" rel="noreferrer" key={title}>
               <Icon size={23} weight="duotone" />
               <span>
                 <strong>{title}</strong>
-                <small>{subtitle}</small>
+                <small>
+                  {ghRepo ? (
+                    <>
+                      {subtitle} · ★<GhStars repo={ghRepo} fallback={ghStarsFallback} />
+                    </>
+                  ) : (
+                    subtitle
+                  )}
+                </small>
               </span>
               <CheckCircle size={18} weight="fill" />
             </a>
@@ -612,21 +627,24 @@ function GhStars({ repo, fallback }) {
   const [stars, setStars] = useState(fallback);
 
   useEffect(() => {
+    let cancelled = false;
     const cacheKey = `gh-stars-${repo}`;
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
       setStars(Number(cached));
-      return;
     }
     fetch(`https://api.github.com/repos/${repo}`)
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
-        if (data && typeof data.stargazers_count === "number") {
+        if (!cancelled && data && typeof data.stargazers_count === "number") {
           setStars(data.stargazers_count);
           sessionStorage.setItem(cacheKey, String(data.stargazers_count));
         }
       })
       .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [repo]);
 
   return <>{stars}</>;
